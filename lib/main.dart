@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:Nazrul_Islam_mollah/view/HorizontalTimeline.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -10,6 +11,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:lottie/lottie.dart';
 //import 'package:lottie/lottie.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:timeline_tile/timeline_tile.dart';
 import 'package:url_launcher/url_launcher.dart';
 void main() {
   runApp(MyApp());
@@ -156,8 +158,8 @@ class _HomePageState extends State<HomePage>{
       competenceTitle,
       SocialActvites(_socialActData,context),
     //formation,
-    experienceTitle,
-    experience,
+    TimelineTitle,
+      TimelineWidget(_timelineData, context),
 
     vieTitle,
     vie,
@@ -669,7 +671,7 @@ Widget SocialActvites (_socialActData,context){
         children: <Widget>[
           Container(
        //     width: 300,
-            height: 250,
+            height: 200,
             margin: EdgeInsets.only(right: 15),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(20),
@@ -782,7 +784,7 @@ Widget SocialActvites (_socialActData,context){
   );
 }
 
-Widget experienceTitle = Container(
+Widget TimelineTitle = Container(
   alignment: Alignment.centerLeft,
   child: Padding(
     padding: const EdgeInsets.only(
@@ -790,7 +792,7 @@ Widget experienceTitle = Container(
       left: 30,
     ),
     child: Text(
-      "Experience",
+      "টাইমলাইন",
       style: GoogleFonts.lato(
         fontSize: 25,
         color: Colors.white,
@@ -799,52 +801,60 @@ Widget experienceTitle = Container(
     ),
   ),
 );
-Widget experience = Container(
-  width: double.infinity,
-  padding: EdgeInsets.all(25),
-  margin: EdgeInsets.fromLTRB(20, 20, 20, 20),
-  decoration: BoxDecoration(
-    borderRadius: BorderRadius.circular(20),
-    color: Color(0xFFDE4C2A),
-  ),
-  child: Column(
-    children: <Widget>[
-      Container(
-        width: 35,
-        height: 35,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(15),
-          color: Colors.white,
-        ),
-        child: Icon(FontAwesomeIcons.pencilRuler),
-      ),
-      Text(
-        "Freelancer",
-        style: GoogleFonts.lato(
-          fontSize: 20,
-          color: Colors.white,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-      Text(
-        "Graphic Designer & Video Editor",
-        style: GoogleFonts.lato(
-          fontSize: 15,
-          color: Colors.white,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-      Text(
-        "2020-Présent",
-        style: GoogleFonts.lato(
-          fontSize: 13,
-          color: Colors.black,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-    ],
-  ),
-);
+Widget TimelineWidget (_timelineData, context){
+  return Container(
+    width: MediaQuery.of(context).size.width*0.9,
+    // height: 240,
+     child: Column(
+       mainAxisSize: MainAxisSize.min,
+       children: [
+         TimelineTile(
+           alignment: TimelineAlign.center,
+           isFirst: true,
+           indicatorStyle: IndicatorStyle(
+             width: 40,
+             color: Colors.purple,
+             padding: const EdgeInsets.all(8),
+             iconStyle: IconStyle(
+               color: Colors.white,
+               iconData: Icons.insert_emoticon,
+             ),
+           ),
+           startChild: Container(
+             constraints: const BoxConstraints(
+               minHeight: 120,
+             ),
+             color: Colors.amberAccent,
+           ),
+         ),
+         TimelineTile(
+           alignment: TimelineAlign.center,
+           isLast: true,
+           indicatorStyle: IndicatorStyle(
+             width: 30,
+             color: Colors.red,
+             indicatorXY: 0.7,
+             iconStyle: IconStyle(
+               color: Colors.white,
+               iconData: Icons.thumb_up,
+             ),
+           ),
+           endChild: Container(
+             constraints: const BoxConstraints(
+               minHeight: 80,
+             ),
+             color: Colors.lightGreenAccent,
+           ),
+         ),
+
+       ],
+     )
+
+
+  ) ;
+  //childHorizontal: HorizontalTimeline();
+}
+
 
 Widget vieTitle = Container(
   alignment: Alignment.centerLeft,
