@@ -685,23 +685,53 @@ Widget SocialActvites (_socialActData,context){
                   color:Color(0xFF16181D),
                   child: Column (
                       children: <Widget>[
-                        Image.network(_socialActData[index]["imagesoruce"].toString(),
-                          fit: BoxFit.contain,
+                       Stack(
+                  alignment: Alignment.center,
+                  children: <Widget>[
+
+                  Image.network(_socialActData[index]["imagesoruce"].toString(),
+                          fit: BoxFit.fill,
                           errorBuilder: (BuildContext context, Object exception, StackTrace stackTrace) {
                             return Text('404 Not Found!');
                           },
                         ),
-                        Divider(thickness: 0.3, color:Colors.amber),
-                        Text(_socialActData[index]["timestamp"].toString(), style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.white), textAlign: TextAlign.center,  overflow: TextOverflow.fade,
-                          maxLines: 1,
-                          softWrap: false,
-                        ),
-                        Text(_socialActData[index]["title"].toString() ,style: TextStyle(fontWeight: FontWeight.w200, fontSize: 8, color: Colors.white), textAlign: TextAlign.center,
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 5,
-                          softWrap: true,
 
+                        Positioned(
+                        bottom:1,
+
+                          child: Align(
+                            alignment: Alignment.center,
+                            child: Text(_socialActData[index]["timestamp"].toString(),
+                              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Colors.white),
+                              textAlign: TextAlign.center,
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                              softWrap: false,
+                            ),
+                          ),
+                        )
+                        ,
+                       ]
+                       ),
+                        Divider(thickness: 0.3, color:Colors.amber, height: 5,),
+                        SizedBox(
+                          width:200,
+                          child: Text(_socialActData[index]["title"].toString() ,style: TextStyle(fontWeight: FontWeight.w400, fontSize: 10, color: Colors.white), textAlign: TextAlign.center,
+                            overflow: TextOverflow.clip,
+                            maxLines: 5,
+                            softWrap: true,
+
+                          ),
                         ),
+                        SizedBox(
+                          width: 250,
+                          child:  Text(_socialActData[index]["description"].toString() ,style: TextStyle(fontWeight: FontWeight.w200, fontSize: 8, color: Colors.white), textAlign: TextAlign.center,
+                            overflow: TextOverflow.clip,
+                            maxLines: 5,
+                            softWrap: true,
+
+                          ),
+                        )
 
                       ]
                   )
