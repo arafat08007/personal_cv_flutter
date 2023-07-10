@@ -1,0 +1,28 @@
+{
+  "politics": [
+    {
+      "sl": 1,
+      "level": "sovapoti",
+      "fromyear": "1968",
+      "comitte": "A comitee"    ,
+      "address": "School name"    ,
+      "party": "Bangladesh awamelegue"
+    },
+    {
+      "sl": 2,
+      "level": "kendrioyo kormi",
+      "fromyear": "1968",
+      "comitte": "B comitte "    ,
+      "address": "School name"    ,
+      "party": "Bangladesh awamelegue"
+    },
+    {
+      "sl": 3,
+      "level": "kendrioyo kormi",
+      "fromyear": "1968",
+      "comitte": "B comitte "    ,
+      "address": "School name"    ,
+      "party": "Bangladesh awamelegue"
+    }
+  ]
+}

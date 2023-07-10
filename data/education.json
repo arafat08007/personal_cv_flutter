@@ -1,0 +1,22 @@
+{
+  "education": [
+    {
+      "sl": 1,
+      "educationLevel": "SSC",
+      "passingYear": "1968",
+      "instituteName": "School name"
+    },
+    {
+      "sl": 2,
+      "educationLevel": "HSC",
+      "passingYear": "1975",
+      "instituteName": "College name"
+    },
+    {
+      "sl": 3,
+      "educationLevel": "BA",
+      "passingYear": "1980",
+      "instituteName": "College name"
+    }
+  ]
+}
