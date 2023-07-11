@@ -1,7 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:Nazrul_Islam_mollah/view/HorizontalTimeline.dart';
+import 'package:flutter_fb_news/flutter_fb_news.dart';
+import 'package:Nazrul_Islam_mollah/view/PhotGallery.dart';
+import 'package:Nazrul_Islam_mollah/model/GlobalInfo.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -46,10 +48,16 @@ class _HomePageState extends State<HomePage>{
   List _politicsData = [];
   List _timelineData = [];
   List _socialActData =[];
+  //fb page feed
+  String fbPageId ="";
+  String fbAccessTockent ="";
+  String fbAppId ="2076096689448739";
+  
   
   // Fetch content from the json file
   Future<void> readEducationJson() async {
     print('Reading Education data, please wait...');
+    _educationData.clear();
      String response = await rootBundle.loadString('data/education.json');
     final edata = await json.decode(response);
     print(edata.toString())  ;
@@ -60,6 +68,7 @@ class _HomePageState extends State<HomePage>{
   }
   Future<void> readpoliticJson() async {
     print('Reading Political data, please wait...');
+    _politicsData.clear();
     String response = await rootBundle.loadString('data/politics.json');
     final edata = await json.decode(response);
     print(edata.toString())  ;
@@ -70,6 +79,7 @@ class _HomePageState extends State<HomePage>{
   }
   Future<void> readsocialJson() async {
     print('Reading social activities data, please wait...');
+    _socialActData.clear();
     String response = await rootBundle.loadString('data/socialact.json');
     final edata = await json.decode(response);
     print(edata.toString())  ;
@@ -78,12 +88,25 @@ class _HomePageState extends State<HomePage>{
     });
     print(_socialActData.length);
   }
+
+  Future<void> readTimelineJson() async {
+    print('Reading Timeline data, please wait...');
+    _timelineData.clear();
+    String response = await rootBundle.loadString('data/timelinedata.json');
+    final edata = await json.decode(response);
+    print(edata.toString())  ;
+    setState(() {
+      _timelineData = edata["timeline"];
+    });
+    print(_timelineData.toString());
+  }
   @override
   void initState() {
     // TODO: implement initState
     readEducationJson();
     readpoliticJson();
     readsocialJson();
+    readTimelineJson();
     super.initState();
     print("initState() called"+_educationData.toString());
 
@@ -135,42 +158,43 @@ class _HomePageState extends State<HomePage>{
             )
             ],
           ),
-     backgroundColor: Color(0xFF023020),
-
-
-    body: SingleChildScrollView(
-      physics: BouncingScrollPhysics(),
-    child: Column(
-    children: <Widget>[
-    SizedBox(height: 40),
-    name,
-    profilTitle,
-    // Divider( indent: 50,endIndent: 50, thickness: 0.3,color: Colors.white,),
-    BioDesc,
-    Divider( indent: 50,endIndent: 50, thickness: 0.3,color: Colors.white,),
-    Qoute(BuildContext),
-    Divider( indent: 50,endIndent: 50, thickness: 0.3,color: Colors.white,),
-    MissionVision,
-    educationTitle,
-    education(_educationData, context),
-    formationTitle,
-    politics(_politicsData,context),
-      competenceTitle,
-      SocialActvites(_socialActData,context),
+          backgroundColor: Color(0xFF023020),
+     body: SingleChildScrollView(
+       physics: BouncingScrollPhysics(),
+       child: Column(
+         children: <Widget>[
+           SizedBox(height: 40),
+           name,
+           profilTitle,
+           BioDesc,
+           Divider( indent: 50,endIndent: 50, thickness: 0.3,color: Colors.white,),
+           Qoute(BuildContext),
+           Divider( indent: 50,endIndent: 50, thickness: 0.3,color: Colors.white,),
+           MissionVision,
+           educationTitle,
+           education(_educationData, context),
+           formationTitle,
+           politics(_politicsData,context),
+           competenceTitle,
+           SocialActvites(_socialActData,context),
     //formation,
-    TimelineTitle,
-      TimelineWidget(_timelineData, context),
-
-    vieTitle,
-    vie,
-    langueTitle,
-    langue,
-    contatcTitle,
-    contact,
-    ],
-    ),
-    ),
-    );
+           TimelineTitle,
+           TimelineWidget(_timelineData, context),
+           PhotoGalleryTitle,
+           Container(
+             width: MediaQuery.of(context).size.width*0.9 ,
+             height: 150,
+             color: Colors.white,
+             child: Text('NO GALLERY IMAGE FOUND'),
+           ),
+           //langueTitle,
+           //langue,
+           contatcTitle,
+           contact,
+         ],
+       ),
+     ),
+   );
   }
 
   void openFb() async {
@@ -342,7 +366,7 @@ Widget formationTitle = Container(
   ),
 );
 
-Widget formation = Container(
+/*Widget formation = Container(
   padding: EdgeInsets.only(
     top: 20,
   ),
@@ -548,7 +572,7 @@ Widget formation = Container(
       ),
     ),
   ),
-);
+); */
 
 Widget educationTitle = Container(
   alignment: Alignment.centerLeft,
@@ -635,7 +659,8 @@ Widget politics (_politicsData, context) {
       ),
 
       child: Text('No Data found!',style:TextStyle(fontWeight: FontWeight.bold,fontSize: 18, color: Colors.redAccent)));
-}   Widget competenceTitle = Container(
+}
+Widget competenceTitle = Container(
   alignment: Alignment.centerLeft,
   child: Padding(
     padding: const EdgeInsets.only(
@@ -802,10 +827,12 @@ Widget TimelineTitle = Container(
   ),
 );
 Widget TimelineWidget (_timelineData, context){
-  return Container(
+  return _timelineData.isNotEmpty?
+  Container(
     width: MediaQuery.of(context).size.width*0.9,
     // height: 240,
-     child: Column(
+     child:  //HorizontalTimeline()
+         Column(
        mainAxisSize: MainAxisSize.min,
        children: [
          TimelineTile(
@@ -851,12 +878,12 @@ Widget TimelineWidget (_timelineData, context){
      )
 
 
-  ) ;
+  ):Container(child: Text('NO DATA FOUND'),) ;
   //childHorizontal: HorizontalTimeline();
 }
 
 
-Widget vieTitle = Container(
+Widget PhotoGalleryTitle = Container(
   alignment: Alignment.centerLeft,
   child: Padding(
     padding: const EdgeInsets.only(
@@ -864,7 +891,7 @@ Widget vieTitle = Container(
       left: 30,
     ),
     child: Text(
-      "Vie Estudiantine",
+      "ফটো গ্যালারী",
       style: GoogleFonts.lato(
         fontSize: 25,
         color: Colors.white,
@@ -979,7 +1006,7 @@ Widget contatcTitle = Container(
       left: 30,
     ),
     child: Text(
-      "Contact",
+      "যোগাযোগ",
       style: GoogleFonts.lato(
         fontSize: 25,
         color: Colors.white,
@@ -1019,8 +1046,7 @@ Widget contact = Container(
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                Text(
-                  "Lot Alfadila N7\nEssaouira, 40000",
+                Text(Globalinfo.address,
                   style: GoogleFonts.lato(
                     fontSize: 15,
                     color: Color(0xFF4E634E),
@@ -1033,7 +1059,7 @@ Widget contact = Container(
           Padding(
             padding: const EdgeInsets.only(top: 10),
             child: Container(
-              margin: EdgeInsets.fromLTRB(7, 0, 0, 0),
+             // margin: EdgeInsets.fromLTRB(7, 0, 0, 0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
@@ -1046,7 +1072,7 @@ Widget contact = Container(
                     ),
                   ),
                   Text(
-                    "+212 708807045",
+                    Globalinfo.phonenumber,
                     style: GoogleFonts.lato(
                       fontSize: 15,
                       color: Color(0xFF4E634E),
@@ -1060,30 +1086,27 @@ Widget contact = Container(
           Padding(
             padding: const EdgeInsets.only(top: 10),
             child: Container(
-              margin: EdgeInsets.fromLTRB(7, 0, 0, 0),
-              child: Padding(
-                padding: const EdgeInsets.only(left: 11),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      "Email",
-                      style: GoogleFonts.lato(
-                        fontSize: 20,
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
-                      ),
+            //  margin: EdgeInsets.fromLTRB(7, 0, 0, 0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    "Email",
+                    style: GoogleFonts.lato(
+                      fontSize: 20,
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
                     ),
-                    Text(
-                      "a.ngadi@outlook.fr",
-                      style: GoogleFonts.lato(
-                        fontSize: 15,
-                        color: Color(0xFF4E634E),
-                        fontWeight: FontWeight.w600,
-                      ),
+                  ),
+                  Text(
+                    Globalinfo.email,
+                    style: GoogleFonts.lato(
+                      fontSize: 15,
+                      color: Color(0xFF4E634E),
+                      fontWeight: FontWeight.w600,
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
           ),
