@@ -38,6 +38,8 @@ dependencies:
   #flutter_fb_news: ^1.1.4-dev.0
   text_scroll: ^0.2.0
   flutter_custom_carousel_slider: ^1.2.0
+  dots_indicator: ^2.0.0
+  get: ^4.6.5
   #flutter_carousel_slider: ^1.1.0
 
 
@@ -58,6 +60,7 @@ flutter:
     - images/profilepic.jpg
     - images/
     - data/education.json
+    - data/gallery.json
     - data/
     - anim/scanning.json
 
