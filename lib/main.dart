@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:flutter_fb_news/flutter_fb_news.dart';
+//import 'package:flutter_fb_news/flutter_fb_news.dart';
 import 'package:Nazrul_Islam_mollah/view/PhotGallery.dart';
 import 'package:Nazrul_Islam_mollah/model/GlobalInfo.dart';
 import 'package:flutter/cupertino.dart';
@@ -15,6 +15,8 @@ import 'package:lottie/lottie.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:timeline_tile/timeline_tile.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_custom_carousel_slider/flutter_custom_carousel_slider.dart';
+
 void main() {
   runApp(MyApp());
 }
@@ -48,6 +50,8 @@ class _HomePageState extends State<HomePage>{
   List _politicsData = [];
   List _timelineData = [];
   List _socialActData =[];
+  List _postData =[];
+
   //fb page feed
   String fbPageId ="";
   String fbAccessTockent ="";
@@ -100,14 +104,31 @@ class _HomePageState extends State<HomePage>{
     });
     print(_timelineData.toString());
   }
+  Future<void> readPostJson() async {
+    print('Reading post data, please wait...');
+    _postData.clear();
+    String response = await rootBundle.loadString('data/postData.json');
+    final edata = await json.decode(response);
+    print(edata.toString())  ;
+    setState(() {
+      _postData = edata["post"];
+    });
+    print(_postData.toString());
+    
+    
+
+  }
   @override
   void initState() {
     // TODO: implement initState
+    super.initState();
+
     readEducationJson();
     readpoliticJson();
     readsocialJson();
     readTimelineJson();
-    super.initState();
+    readPostJson();
+
     print("initState() called"+_educationData.toString());
 
     
@@ -168,7 +189,7 @@ class _HomePageState extends State<HomePage>{
            profilTitle,
            BioDesc,
            Divider( indent: 50,endIndent: 50, thickness: 0.3,color: Colors.white,),
-           Qoute(BuildContext),
+           Qoute(_postData,context),
            Divider( indent: 50,endIndent: 50, thickness: 0.3,color: Colors.white,),
            MissionVision,
            educationTitle,
@@ -256,27 +277,31 @@ Widget  MissionVision = Container(
     ),
   ),
 );
- Widget Qoute (context) {
-  return Container(    
-   child:
-   CarouselSlider(
-     options: CarouselOptions(height: 100.0),
-
-     items: [1,2,3].map((i) {
-       return Builder(
-
-         builder: (BuildContext context) {
-           return Container(
-               width: MediaQuery.of(context).size.width-20,
-             //  margin: EdgeInsets.symmetric(horizontal: 5.0),
-             
-               child: Center(child: Text('text $i', style: TextStyle(fontSize: 12.0, color: Colors.white),))
-           );
-         },
+ Widget Qoute (_postData,context) {
+  return _postData.isNotEmpty?
+  Container(
+    color: Colors.white,
+    height: MediaQuery.of(context).size.height*0.13,
+   width: MediaQuery.of(context).size.width*0.9 ,
+   child:  ListView.builder(
+     shrinkWrap: true,
+     physics: BouncingScrollPhysics(),
+     scrollDirection:Axis.horizontal,
+     itemCount: _postData.length,
+     itemBuilder: (context, index) {
+       return Column(
+         children: [
+           Text(_postData[index]["postDesc"]),
+           Text(_postData[index]["postDateTime"]),
+         ],
        );
-     }).toList(),
-   )
- ); }
+     },
+   ),
+
+ ):Container(
+    child: Text ('NO POST FOUND!'),
+  );
+ }
 
 Widget name = Container(
   child: Column(
@@ -295,7 +320,7 @@ Widget name = Container(
       Text(
         "নজরুল ইসলাম মোল্লা",
         style: GoogleFonts.lato(
-          fontSize: 25,
+          fontSize: 20,
           color: Colors.yellow,
           fontWeight: FontWeight.bold,
         ),
@@ -322,7 +347,7 @@ Widget profilTitle = Container(
     child: Text(
       "আমার সম্পর্কিত",
       style: GoogleFonts.lato(
-        fontSize: 25,
+        fontSize: 20,
         color: Colors.white,
         fontWeight: FontWeight.bold,
       ),
@@ -358,7 +383,7 @@ Widget formationTitle = Container(
     child: Text(
       "রাজনীতি",
       style: GoogleFonts.lato(
-        fontSize: 25,
+        fontSize: 20,
         color: Colors.white,
         fontWeight: FontWeight.bold,
       ),
@@ -366,213 +391,7 @@ Widget formationTitle = Container(
   ),
 );
 
-/*Widget formation = Container(
-  padding: EdgeInsets.only(
-    top: 20,
-  ),
-  child: SingleChildScrollView(
-    physics: BouncingScrollPhysics(),
-    scrollDirection: Axis.horizontal,
-    child: Padding(
-      padding: const EdgeInsets.only(left: 20),
-      child: Container(
-        child: Row(
-          children: <Widget>[
-            Container(
-              width: 180,
-              height: 115,
-              margin: EdgeInsets.only(right: 25),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                color: Color(0xFFFFABC8),
-              ),
-              child: Column(
-                children: <Widget>[
-                  Padding(
-                    padding:
-                        const EdgeInsets.only(left: 10, right: 10, top: 15),
-                    child: Text(
-                      "HarvardX : CS50",
-                      style: TextStyle(
-                        color: Color(0xFF2C352D),
-                        fontSize: 12,
-                        fontWeight: FontWeight.w400,
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(
-                      left: 10,
-                      right: 10,
-                    ),
-                    child: Text(
-                      "CS50's introduction\nto computer science",
-                      style: GoogleFonts.lato(
-                        fontSize: 15,
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(
-                        left: 10, right: 10, bottom: 15, top: 5),
-                    child: Center(
-                      child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                          color: Colors.white,
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.only(
-                              left: 6, top: 6, right: 6, bottom: 6),
-                          child: Text(
-                            "2020",
-                            style: GoogleFonts.lato(
-                              fontSize: 15,
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Container(
-              width: 180,
-              height: 115,
-              margin: EdgeInsets.only(right: 20),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                color: Color(0xFF7768D8),
-              ),
-              child: Column(
-                children: <Widget>[
-                  Padding(
-                    padding:
-                        const EdgeInsets.only(left: 10, right: 10, top: 15),
-                    child: Text(
-                      "Udemy",
-                      style: TextStyle(
-                        color: Color(0xFF2C352D),
-                        fontSize: 12,
-                        fontWeight: FontWeight.w400,
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(
-                      left: 20,
-                      right: 20,
-                    ),
-                    child: Text(
-                      "Flutter development bootcamp with Dart",
-                      style: GoogleFonts.lato(
-                        fontSize: 15,
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(
-                        left: 10, right: 10, bottom: 15, top: 5),
-                    child: Center(
-                      child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                          color: Colors.white,
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.only(
-                              left: 6, top: 6, right: 6, bottom: 6),
-                          child: Text(
-                            "2020",
-                            style: GoogleFonts.lato(
-                              fontSize: 15,
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Container(
-              width: 180,
-              height: 115,
-              margin: EdgeInsets.only(right: 20),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                color: Color(0xFF8AC185),
-              ),
-              child: Column(
-                children: <Widget>[
-                  Padding(
-                    padding:
-                        const EdgeInsets.only(left: 10, right: 10, top: 15),
-                    child: Text(
-                      "Udemy",
-                      style: TextStyle(
-                        color: Color(0xFF2C352D),
-                        fontSize: 12,
-                        fontWeight: FontWeight.w400,
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(
-                      left: 20,
-                      right: 20,
-                    ),
-                    child: Text(
-                      "Formation Complète Développeur Web",
-                      style: GoogleFonts.lato(
-                        fontSize: 15,
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(
-                        left: 10, right: 10, bottom: 15, top: 5),
-                    child: Center(
-                      child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                          color: Colors.white,
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.only(
-                              left: 6, top: 6, right: 6, bottom: 6),
-                          child: Text(
-                            "2019",
-                            style: GoogleFonts.lato(
-                              fontSize: 15,
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    ),
-  ),
-); */
+
 
 Widget educationTitle = Container(
   alignment: Alignment.centerLeft,
@@ -584,7 +403,7 @@ Widget educationTitle = Container(
     child: Text(
       "শিক্ষাগত যোগ্যতা",
       style: GoogleFonts.lato(
-        fontSize: 25,
+        fontSize: 20,
         color: Colors.white,
         fontWeight: FontWeight.bold,
       ),
@@ -597,7 +416,8 @@ Widget education (_educationData, context) {
  Container(
    width: MediaQuery.of(context).size.width,
    height: 200,
-   child: ListView.builder(
+   child:
+   ListView.builder(
      shrinkWrap: true,
      physics: BouncingScrollPhysics(),
      itemCount: _educationData.length,
@@ -670,7 +490,7 @@ Widget competenceTitle = Container(
     child: Text(
       "সামাজিক কর্ম",
       style: GoogleFonts.lato(
-        fontSize: 25,
+        fontSize: 20,
         color: Colors.white,
         fontWeight: FontWeight.bold,
       ),
@@ -819,7 +639,7 @@ Widget TimelineTitle = Container(
     child: Text(
       "টাইমলাইন",
       style: GoogleFonts.lato(
-        fontSize: 25,
+        fontSize: 20,
         color: Colors.white,
         fontWeight: FontWeight.bold,
       ),
@@ -893,7 +713,7 @@ Widget PhotoGalleryTitle = Container(
     child: Text(
       "ফটো গ্যালারী",
       style: GoogleFonts.lato(
-        fontSize: 25,
+        fontSize: 20,
         color: Colors.white,
         fontWeight: FontWeight.bold,
       ),
@@ -1008,7 +828,7 @@ Widget contatcTitle = Container(
     child: Text(
       "যোগাযোগ",
       style: GoogleFonts.lato(
-        fontSize: 25,
+        fontSize: 20,
         color: Colors.white,
         fontWeight: FontWeight.bold,
       ),
