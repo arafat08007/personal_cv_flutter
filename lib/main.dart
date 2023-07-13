@@ -411,7 +411,7 @@ Widget galleryPicture(_imageData, context) {
               padding: EdgeInsets.all(3),
               child: GestureDetector(
                 onTap: (){
-                  CustomDailog(context,_imageData[index]['title'], _imageData[index]['Description'], );
+                  CustomDailog(context,_imageData[index]['title'], _imageData[index]['Description'], true,_imageData[index]['desc_img'] );
                 },
                 child: Image.network(_imageData[index]['desc_img'],
                   fit: BoxFit.fill,
@@ -674,7 +674,7 @@ Widget SocialActvites(_socialActData, context) {
               children: <Widget>[
                 Container(
                   //     width: 300,
-                  height: 200,
+                  height: 250,
                   margin: EdgeInsets.only(right: 15),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(20),
@@ -1345,16 +1345,46 @@ Widget vie = Container(
   ),
 );
 
-CustomDailog(context,  String title, String descripiton){
+CustomDailog(context,  String title, String descripiton , isZoom, String imgsrc){
   String dailogTitle =title.isNotEmpty? title.toString(): "No title found";
   String dailogDesc =descripiton.isNotEmpty? descripiton.toString(): "No Desc found";
-  return    NDialog(
-    dialogStyle: DialogStyle(titleDivider: true),
-    title: Text(dailogTitle),
-    content: Text(dailogDesc),
-    actions: <Widget>[
-      TextButton(child: Text("Okay"), onPressed: () => Navigator.pop(context)),
-    //  TextButton(child: Text("Close"), onPressed: () => Navigator.pop(context)),
-    ],
-  ).show(context);
+  String img = imgsrc.isNotEmpty? imgsrc :"images/noimage.jpg";
+  if(!isZoom) {
+    return NDialog(
+      dialogStyle: DialogStyle(titleDivider: true),
+      title: Text(dailogTitle),
+      content: Text(dailogDesc),
+      actions: <Widget>[
+        TextButton(
+            child: Text("Okay"), onPressed: () => Navigator.pop(context)),
+        //  TextButton(child: Text("Close"), onPressed: () => Navigator.pop(context)),
+      ],
+    ).show(context);
+  }
+  else {
+   return ZoomDialog(
+      zoomScale: 3,
+      child: Container(
+        width: MediaQuery.of(context).size.width*0.6,
+        height: MediaQuery.of(context).size.height*0.6,
+
+        child: Column(
+          children: [
+            Text(dailogTitle),
+            Divider(),
+          Image.network(img,
+          fit: BoxFit.fill,
+          height: 200.0,
+          width: 200.0,),
+            Text(dailogDesc),
+
+
+
+          ],
+        ),
+        color: Colors.amber,
+        padding: EdgeInsets.all(20),
+      ),
+    ).show(context);
+  }
 }

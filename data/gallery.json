@@ -3,43 +3,43 @@
     {
         "sl": 1,
       "title": "ABC1",
-      "desc_img" : "http://static.wikia.nocookie.net/dota2_gamepedia/images/9/96/Swiftslash_icon.png"   ,
+      "desc_img" : "https://via.placeholder.com/150/92c952"   ,
       "Description": "Description about the image"
     },
     {
       "sl": 2,
       "title": "ABC2",
-      "desc_img" : "http://static.wikia.nocookie.net/dota2_gamepedia/images/9/96/Swiftslash_icon.png"   ,
+      "desc_img" : "https://via.placeholder.com/150/771796"   ,
       "Description": "Description about the image"
     },
     {
       "sl": 3,
       "title": "XYZ1",
-      "desc_img" : "http://static.wikia.nocookie.net/dota2_gamepedia/images/9/96/Swiftslash_icon.png"   ,
+      "desc_img" : "https://via.placeholder.com/150/24f355"   ,
       "Description": "Description about the image"
     },
     {
       "sl": 4,
       "title": "XYZ2",
-      "desc_img" : "http://static.wikia.nocookie.net/dota2_gamepedia/images/9/96/Swiftslash_icon.png"   ,
+      "desc_img" : "https://via.placeholder.com/150/d32776"   ,
       "Description": "Description about the image"
     }   ,
     {
       "sl": 5,
       "title": "XYZ3",
-      "desc_img" : "http://static.wikia.nocookie.net/dota2_gamepedia/images/9/96/Swiftslash_icon.png"   ,
+      "desc_img" : "https://via.placeholder.com/150/f66b97"   ,
       "Description": "Description about the image"
     },
     {
       "sl": 6,
       "title": "EFG",
-      "desc_img" : "http://static.wikia.nocookie.net/dota2_gamepedia/images/9/96/Swiftslash_icon.png"   ,
+      "desc_img" : "https://via.placeholder.com/150/56a8c2"   ,
       "Description": "Description about the image"
     },
     {
       "sl": 7,
       "title": "DEF",
-      "desc_img" : "http://static.wikia.nocookie.net/dota2_gamepedia/images/9/96/Swiftslash_icon.png"   ,
+      "desc_img" : "https://via.placeholder.com/150/b0f7cc"   ,
       "Description": "Description about the image"
     }
 
