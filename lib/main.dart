@@ -15,6 +15,7 @@ import 'package:lottie/lottie.dart';
 
 //import 'package:lottie/lottie.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:ndialog/ndialog.dart';
 import 'package:timeline_tile/timeline_tile.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_custom_carousel_slider/flutter_custom_carousel_slider.dart';
@@ -396,6 +397,7 @@ Widget galleryPicture(_imageData, context) {
   return _imageData.isNotEmpty
       ? Container(
         height: MediaQuery.of(context).size.height * 0.4,
+        margin: EdgeInsets.all(3),
         child: GridView.builder(
           scrollDirection: Axis.horizontal,
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -405,9 +407,18 @@ Widget galleryPicture(_imageData, context) {
           ),
           itemCount: _imageData.length,
           itemBuilder: (context, index) {
-            return Image.network(_imageData[index]['desc_img'],
-              height: 100.0,
-              width: 100.0,);
+            return Padding(
+              padding: EdgeInsets.all(3),
+              child: GestureDetector(
+                onTap: (){
+                  CustomDailog(context,_imageData[index]['title'], _imageData[index]['Description'], );
+                },
+                child: Image.network(_imageData[index]['desc_img'],
+                  fit: BoxFit.fill,
+                  height: 100.0,
+                  width: 100.0,),
+              ),
+            );
           },
         ),
       )
@@ -1333,3 +1344,17 @@ Widget vie = Container(
     ],
   ),
 );
+
+CustomDailog(context,  String title, String descripiton){
+  String dailogTitle =title.isNotEmpty? title.toString(): "No title found";
+  String dailogDesc =descripiton.isNotEmpty? descripiton.toString(): "No Desc found";
+  return    NDialog(
+    dialogStyle: DialogStyle(titleDivider: true),
+    title: Text(dailogTitle),
+    content: Text(dailogDesc),
+    actions: <Widget>[
+      TextButton(child: Text("Okay"), onPressed: () => Navigator.pop(context)),
+    //  TextButton(child: Text("Close"), onPressed: () => Navigator.pop(context)),
+    ],
+  ).show(context);
+}
