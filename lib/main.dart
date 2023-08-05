@@ -288,7 +288,7 @@ class _HomePageState extends State<HomePage> {
     readGalleryJson();
     readPostJson();
 
-    print("initState() called" + _educationData.toString());
+    print("initState() called" );
   }
   @override
   void dispose() {
@@ -615,16 +615,16 @@ Widget education(_educationData, context) {
           color: Colors.black54,
           margin: const EdgeInsets.only(top: 5, left: 10, right: 10),
           child: ListTile(
-            leading: Text(_educationData[index]["title"],
+            leading: Text(_educationData[index]["year"],
                 style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 18,
                     color: Colors.amber)),
-            // title: Text(_educationData[index]["educationLevel"],
-            //     style: TextStyle(
-            //         fontWeight: FontWeight.bold,
-            //         fontSize: 16,
-            //         color: Colors.amber)),
+             title: Text(_educationData[index]["title"],
+                style: TextStyle(
+                     fontWeight: FontWeight.bold,
+                     fontSize: 16,
+                     color: Colors.amber)),
             subtitle: Text(_educationData[index]["description"],
                 style: TextStyle(
                     fontWeight: FontWeight.bold,
@@ -666,16 +666,16 @@ Widget politics(_politicsData, context) {
           elevation: 0,
           margin: const EdgeInsets.only(top: 5, left: 10, right: 10),
           child: ListTile(
-            leading: Text(_politicsData[index]["title"],
+            leading: Text(_politicsData[index]["year"],
                 style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 18,
                     color: Colors.amber)),
-            // title: Text(_politicsData[index]["level"],
-            //     style: TextStyle(
-            //         fontWeight: FontWeight.bold,
-            //         fontSize: 16,
-            //         color: Colors.amber)),
+            title: Text(_politicsData[index]["title"],
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                    color: Colors.amber)),
             subtitle: Text(_politicsData[index]["description"],
                 style: TextStyle(
                     fontWeight: FontWeight.bold,
@@ -1029,7 +1029,11 @@ Widget TimelineTitle = Container(
 
 Widget TimelineWidget(_timelineData, context) {
   return Container(
-    child: Text('Your time line data'),
+    child: Text('Data fetching ... \n please wait...', style: GoogleFonts.lato(
+      fontSize: 20,
+      color: Colors.white,
+      fontWeight: FontWeight.bold,
+    ),),
   ) ;
   //childHorizontal: HorizontalTimeline();
 }
@@ -1149,6 +1153,7 @@ Widget langue = Container(
     ],
   ),
 );
+
 Widget contatcTitle = Container(
   alignment: Alignment.centerLeft,
   child: Padding(
