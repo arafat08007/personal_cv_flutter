@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
-
+import 'package:Nazrul_Islam_mollah/widget/CustomTextFeild.dart';
+import 'package:dio/dio.dart';
 //import 'package:flutter_fb_news/flutter_fb_news.dart';
 import 'package:Nazrul_Islam_mollah/view/PhotGallery.dart';
 import 'package:Nazrul_Islam_mollah/model/GlobalInfo.dart';
@@ -11,6 +12,7 @@ import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
 
 //import 'package:lottie/lottie.dart';
@@ -22,6 +24,13 @@ import 'package:flutter_custom_carousel_slider/flutter_custom_carousel_slider.da
 
 import 'controller/home_controller.dart';
 import 'package:get/get.dart';
+import './controller/API.dart';
+
+import 'package:http/http.dart' as http;
+//model
+import './model/EducationDataModel.dart';
+import 'model/messageModel.dart';
+import 'widget/CustomButton.dart';
 
 void main() {
   runApp(MyApp());
@@ -50,66 +59,185 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   CarouselController buttonCarouselController = CarouselController();
+  TextEditingController nameEditController = TextEditingController();
+  TextEditingController emailEditController = TextEditingController();
+  TextEditingController subjectEditController = TextEditingController();
+  TextEditingController messageBodyEditController = TextEditingController();
+
+  List _bioData =[];
   List _educationData = [];
   List _politicsData = [];
   List _timelineData = [];
   List _socialActData = [];
   List _postData = [];
+  List _qouteData   = [];
 
   List _imagesData = [];
+  List _missionData = [] ;
 
+
+  final dio = Dio();
   //fb page feed
   String fbPageId = "";
   String fbAccessTockent = "";
   String fbAppId = "2076096689448739";
 
   // Fetch content from the json file
+  Future<void> readBioJson() async {
+    var edata;
+    print('Reading bio data, please wait...');
+    _educationData.clear();
+    try {
+      // String response = await rootBundle.loadString('data/education.json');
+      http.Response res = await http.get(Uri.parse(GlobalAPI.bioData));
+      if (res.statusCode == 200) {
+        edata = await json.decode(res.body);
+        print ('bio api response/n') ;
+        print (edata);
+      }
+      setState(() {
+        _bioData = edata["bios"];
+      });
+    }
+    catch (e){
+      debugPrint(e.toString());
+    }
+    print(_bioData.length);
+
+  }
+
+  Future<void> readQuoteJson() async {
+    var edata;
+    print('Reading quote data, please wait...');
+    _qouteData.clear();
+    try {
+      // String response = await rootBundle.loadString('data/education.json');
+      http.Response res = await http.get(Uri.parse(GlobalAPI.quoteData));
+      if (res.statusCode == 200) {
+        edata = await json.decode(res.body);
+        print ('quote api response/n') ;
+        print (edata);
+      }
+      setState(() {
+        _qouteData = edata["quotes"];
+      });
+    }
+    catch (e){
+      debugPrint(e.toString());
+    }
+    print(_qouteData.length);
+
+  }
+  Future<void> readMissionJson() async {
+    var edata;
+    print('Reading missions data, please wait...');
+    _missionData.clear();
+    try {
+      // String response = await rootBundle.loadString('data/education.json');
+      http.Response res = await http.get(Uri.parse(GlobalAPI.missionData));
+      if (res.statusCode == 200) {
+        edata = await json.decode(res.body);
+        print ('missions api response/n') ;
+        print (edata);
+      }
+      setState(() {
+        _missionData = edata["missions"];
+      });
+    }
+    catch (e){
+      debugPrint(e.toString());
+    }
+    print(_missionData.length);
+
+  }
+
   Future<void> readEducationJson() async {
+    var edata;
     print('Reading Education data, please wait...');
     _educationData.clear();
-    String response = await rootBundle.loadString('data/education.json');
-    final edata = await json.decode(response);
-    print(edata.toString());
-    setState(() {
-      _educationData = edata["education"];
-    });
+    try {
+      // String response = await rootBundle.loadString('data/education.json');
+      http.Response res = await http.get(Uri.parse(GlobalAPI.educationData));
+      if (res.statusCode == 200) {
+        edata = await json.decode(res.body);
+        print ('Education api response/n') ;
+        print (edata);
+      }
+      setState(() {
+        _educationData = edata["educations"];
+      });
+    }
+    catch (e){
+      debugPrint(e.toString());
+    }
     print(_educationData.length);
   }
 
   Future<void> readpoliticJson() async {
-    print('Reading Political data, please wait...');
+    var edata;
+    print('Reading political data, please wait...');
     _politicsData.clear();
-    String response = await rootBundle.loadString('data/politics.json');
-    final edata = await json.decode(response);
-    print(edata.toString());
-    setState(() {
-      _politicsData = edata["politics"];
-    });
+    try {
+      // String response = await rootBundle.loadString('data/education.json');
+      http.Response res = await http.get(Uri.parse(GlobalAPI.politicData));
+      if (res.statusCode == 200) {
+        edata = await json.decode(res.body);
+        print ('political api response/n') ;
+        print (edata);
+      }
+      setState(() {
+        _politicsData = edata["politics"];
+      });
+    }
+    catch (e){
+      debugPrint(e.toString());
+    }
     print(_politicsData.length);
+
   }
 
   Future<void> readsocialJson() async {
-    print('Reading social activities data, please wait...');
+    var edata;
+    print('Reading missions data, please wait...');
     _socialActData.clear();
-    String response = await rootBundle.loadString('data/socialact.json');
-    final edata = await json.decode(response);
-    print(edata.toString());
-    setState(() {
-      _socialActData = edata["socialacts"];
-    });
+    try {
+      // String response = await rootBundle.loadString('data/education.json');
+      http.Response res = await http.get(Uri.parse(GlobalAPI.activityData));
+      if (res.statusCode == 200) {
+        edata = await json.decode(res.body);
+        print ('missions api response/n') ;
+        print (edata);
+      }
+      setState(() {
+        _socialActData = edata["activities"];
+      });
+    }
+    catch (e){
+      debugPrint(e.toString());
+    }
     print(_socialActData.length);
   }
 
   Future<void> readTimelineJson() async {
-    print('Reading Timeline data, please wait...');
+    var edata;
+    print('Reading missions data, please wait...');
     _timelineData.clear();
-    String response = await rootBundle.loadString('data/timelinedata.json');
-    final edata = await json.decode(response);
-    print(edata.toString());
-    setState(() {
-      _timelineData = edata["timeline"];
-    });
-    print(_timelineData.toString());
+    try {
+      // String response = await rootBundle.loadString('data/education.json');
+      http.Response res = await http.get(Uri.parse(GlobalAPI.timelineData));
+      if (res.statusCode == 200) {
+        edata = await json.decode(res.body);
+        print ('missions api response/n') ;
+        print (edata);
+      }
+      setState(() {
+        _timelineData = edata["activities"];
+      });
+    }
+    catch (e){
+      debugPrint(e.toString());
+    }
+    print(_timelineData.length);
   }
 
   Future<void> readPostJson() async {
@@ -125,30 +253,53 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> readGalleryJson() async {
-    print('Reading post data, please wait...');
+    var edata;
+    print('Reading photo data, please wait...');
     _imagesData.clear();
-    String response = await rootBundle.loadString('data/gallery.json');
-    final edata = await json.decode(response);
-    print(edata.toString());
-    setState(() {
-      _imagesData = edata["gallery"];
-    });
-    print(_postData.toString());
+    try {
+      // String response = await rootBundle.loadString('data/education.json');
+      http.Response res = await http.get(Uri.parse(GlobalAPI.photoData));
+      if (res.statusCode == 200) {
+        edata = await json.decode(res.body);
+        print ('photo api response/n') ;
+        print (edata);
+      }
+      setState(() {
+        _imagesData = edata["photos"];
+      });
+    }
+    catch (e){
+      debugPrint(e.toString());
+    }
+    print(_imagesData.length);
   }
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-
+    readBioJson();
+    readQuoteJson ();
+    readMissionJson();
     readEducationJson();
     readpoliticJson();
     readsocialJson();
     readTimelineJson();
-    readPostJson();
     readGalleryJson();
+    readPostJson();
 
     print("initState() called" + _educationData.toString());
+  }
+  @override
+  void dispose() {
+    //buttonCarouselController.dispose();
+    // ignore: avoid_print
+    nameEditController.dispose();
+    emailEditController.dispose();
+    subjectEditController.dispose()   ;
+    messageBodyEditController.dispose();
+    print('Dispose used');
+    super.dispose();
   }
 
   final homeController = Get.put(HomeController());
@@ -198,58 +349,60 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
       backgroundColor: Color(0xFF023020),
-      body: SingleChildScrollView(
-        physics: BouncingScrollPhysics(),
-        child: Column(
-          children: <Widget>[
-            SizedBox(height: 40),
-            name,
-            profilTitle,
-            BioDesc,
-            Divider(
-              indent: 50,
-              endIndent: 50,
-              thickness: 0.3,
-              color: Colors.white,
-            ),
-            Qoute(_postData, context),
-            Divider(
-              indent: 50,
-              endIndent: 50,
-              thickness: 0.3,
-              color: Colors.white,
-            ),
-            MissionVision,
-            educationTitle,
-            education(_educationData, context),
-            formationTitle,
-            politics(_politicsData, context),
-            competenceTitle,
-            SocialActvites(_socialActData, context),
-            //formation,
-            TimelineTitle,
-            TimelineWidget(_timelineData, context),
-            PhotoGalleryTitle,
-            galleryPicture(_imagesData, context),
-            //langueTitle,
-            //langue,
-            contatcTitle,
-            contact,
-          ],
+      body: SafeArea(
+        child: SingleChildScrollView(
+          physics: BouncingScrollPhysics(),
+          child: Column(
+            children: <Widget>[
+              SizedBox(height: 40),
+              name,
+              profilTitle,
+              BioDesc (_bioData,context),
+              Divider(
+                indent: 50,
+                endIndent: 50,
+                thickness: 0.3,
+                color: Colors.white,
+              ),
+              Qoute(_qouteData, context),
+              Divider(
+                indent: 50,
+                endIndent: 50,
+                thickness: 0.3,
+                color: Colors.white,
+              ),
+              MissionVision(_missionData,context),
+              educationTitle,
+              education(_educationData, context),
+              formationTitle,
+              politics(_politicsData, context),
+              competenceTitle,
+              SocialActvites(_socialActData, context),
+              //formation,
+              TimelineTitle,
+              TimelineWidget(_timelineData, context),
+              PhotoGalleryTitle,
+              galleryPicture(_imagesData, context),
+              //langueTitle,
+              //langue,
+              contatcTitle,
+              contact(context, nameEditController, emailEditController, subjectEditController, messageBodyEditController ),
+            ],
+          ),
         ),
       ),
     );
   }
 
   void openFb() async {
-    final Uri url = Uri.parse('https://facebook.com');
+    final Uri url = Uri.parse('https://www.facebook.com/Dhaka14NazrulIslamMollah');
     if (!await launchUrl(url)) {
       throw Exception('Could not launch $url');
     }
   }
 
   void openWebsite() async {
-    final Uri url = Uri.parse('https://yourwebsite.com');
+    final Uri url = Uri.parse('https://nazrulislammollah.com/');
     if (!await launchUrl(url)) {
       throw Exception('Could not launch $url');
     }
@@ -281,50 +434,47 @@ class _HomePageState extends State<HomePage> {
       print('Unable to load whatsapp\t' + e.toString());
     }
   }
+
 }
 
-Widget MissionVision = Container(
-  padding: EdgeInsets.only(top: 15),
-  //alignment: Alignment.centerLeft,
-  alignment: Alignment.topLeft,
-  child: Align(
-    alignment: Alignment.centerLeft,
-    child: Column(
-      children: [
-        Text(
-          'মিশন ও ভিশন',
-          textAlign: TextAlign.left,
-          style: TextStyle(
-              color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
-        ),
-        SizedBox(
-          height: 10,
-        ),
-        Text('Mission Text',
-            textAlign: TextAlign.left,
-            style: TextStyle(
-              color: Colors.white,
-            )),
-        Divider(
-          indent: 50,
-          endIndent: 50,
-          thickness: 0.5,
-          color: Colors.amber,
-        ),
-        Text('Vision Text',
-            textAlign: TextAlign.left,
-            style: TextStyle(
-              color: Colors.white,
-            )),
-      ],
-    ),
-  ),
-);
 
-Widget Qoute(_postData, context) {
+Widget BioDesc (_BioDesc,context) {
+  return  _BioDesc.isNotEmpty?
+  Container(
+    width: double.infinity,
+    padding: EdgeInsets.all(25),
+    margin: EdgeInsets.fromLTRB(20, 20, 20, 20),
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(20),
+      color: Color(0xFFEFC777),
+    ),
+    child: (
+        Text(_BioDesc[0]["description"])
+    ),
+  ):
+
+  Container(
+    width: double.infinity,
+    padding: EdgeInsets.all(25),
+    margin: EdgeInsets.fromLTRB(20, 20, 20, 20),
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(20),
+      color: Color(0xFFEFC777),
+    ),
+    child: Text(
+      "নিজের ব্যাপারে সর্বোচ্চ ২০০ শব্দে কিছু দেখাবে",
+      style: TextStyle(
+        color: Color(0xFF2C352D),
+        fontSize: 13,
+        fontWeight: FontWeight.w600,
+      ),
+    ),
+  );
+}
+Widget Qoute(_qouteData, context) {
   final homeController = Get.find<HomeController>();
 
-  return _postData.isNotEmpty
+  return _qouteData.isNotEmpty
       ? Column(
           children: [
             Container(
@@ -346,7 +496,7 @@ Widget Qoute(_postData, context) {
                       homeController.selectedIndex.value = index;
                     },
                   ),
-                  itemCount: _postData.length, // The length of the posts list
+                  itemCount: _qouteData.length, // The length of the posts list
                   itemBuilder: (context, index, realIndex) {
                     // A function that returns a widget for each post
                     return Container(
@@ -359,7 +509,7 @@ Widget Qoute(_postData, context) {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            "\"${_postData[index]['postDesc']}\"",
+                            "\"${_qouteData[index]['description']}\"",
                             // The post description
                             style: TextStyle(
                               fontSize: 11.0,
@@ -376,7 +526,7 @@ Widget Qoute(_postData, context) {
             ),
             Obx(
               () => DotsIndicator(
-                dotsCount: _postData.length, // The length of the posts list
+                dotsCount: _qouteData.length, // The length of the posts list
                 position: homeController.selectedIndex.value.toDouble(),
                 decorator: DotsDecorator(
                     color: Colors.white, // The inactive dot color
@@ -387,10 +537,320 @@ Widget Qoute(_postData, context) {
           ],
         )
       : Container(
-          child: Text('NO POST FOUND!'),
+          child: Text('NO QUOTE FOUND!'),
         );
 }
+Widget MissionVision (_missionData , context) {
+  return  _missionData.isNotEmpty?
+  Container(
+    padding: EdgeInsets.only(top: 15),
+    alignment: Alignment.topCenter,
+    child: Column(
+      children: [
+        Text(
+          'মিশন ও ভিশন',
+          textAlign: TextAlign.left,
+          style: TextStyle(
+              color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
+        ),
+        SizedBox(
+          height: 10,
+        ),
+        Text(_missionData[0]["description"],
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: Colors.white,
+            )),
+      ],
+    ),
+  )
+      :Container(
+    padding: EdgeInsets.only(top: 15),
+    //alignment: Alignment.centerLeft,
+    alignment: Alignment.topLeft,
+    child: Align(
+      alignment: Alignment.centerLeft,
+      child: Column(
+        children: [
+          Text(
+            'মিশন ও ভিশন',
+            textAlign: TextAlign.left,
+            style: TextStyle(
+                color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          Text('Mission Text',
+              textAlign: TextAlign.left,
+              style: TextStyle(
+                color: Colors.white,
+              )),
+          Divider(
+            indent: 50,
+            endIndent: 50,
+            thickness: 0.5,
+            color: Colors.amber,
+          ),
+          Text('Vision Text',
+              textAlign: TextAlign.left,
+              style: TextStyle(
+                color: Colors.white,
+              )),
+        ],
+      ),
+    ),
+  );          }
+Widget education(_educationData, context) {
+  return _educationData.isNotEmpty
+      ? Container(
+    width: MediaQuery.of(context).size.width,
+    height: 200,
+    child: ListView.builder(
+      shrinkWrap: true,
+      physics: BouncingScrollPhysics(),
+      itemCount: _educationData.length,
+      itemBuilder: (context, index) {
+        return Card(
+          color: Colors.black54,
+          margin: const EdgeInsets.only(top: 5, left: 10, right: 10),
+          child: ListTile(
+            leading: Text(_educationData[index]["title"],
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
+                    color: Colors.amber)),
+            // title: Text(_educationData[index]["educationLevel"],
+            //     style: TextStyle(
+            //         fontWeight: FontWeight.bold,
+            //         fontSize: 16,
+            //         color: Colors.amber)),
+            subtitle: Text(_educationData[index]["description"],
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 10,
+                    color: Colors.white)),
+          ),
+        );
+      },
+    ),
+  )
+      : Container(
+      width: MediaQuery.of(context).size.width,
+      padding: EdgeInsets.all(20),
+      margin: EdgeInsets.fromLTRB(20, 10, 20, 5),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20),
+        color: Color(0xFF16181D),
+      ),
+      child: Text('No Data found!',
+          style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 18,
+              color: Colors.redAccent)));
+  ;
+}
 
+Widget politics(_politicsData, context) {
+  return _politicsData.isNotEmpty
+      ? Container(
+    width: MediaQuery.of(context).size.width,
+    height: 200,
+    child: ListView.builder(
+      shrinkWrap: true,
+      physics: BouncingScrollPhysics(),
+      itemCount: _politicsData.length,
+      itemBuilder: (context, index) {
+        return Card(
+          color: Colors.black54,
+          elevation: 0,
+          margin: const EdgeInsets.only(top: 5, left: 10, right: 10),
+          child: ListTile(
+            leading: Text(_politicsData[index]["title"],
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
+                    color: Colors.amber)),
+            // title: Text(_politicsData[index]["level"],
+            //     style: TextStyle(
+            //         fontWeight: FontWeight.bold,
+            //         fontSize: 16,
+            //         color: Colors.amber)),
+            subtitle: Text(_politicsData[index]["description"],
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 10,
+                    color: Colors.white)),
+          ),
+        );
+      },
+    ),
+  )
+      : Container(
+      width: MediaQuery.of(context).size.width,
+      padding: EdgeInsets.all(20),
+      margin: EdgeInsets.fromLTRB(20, 10, 20, 5),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20),
+        color: Color(0xFF16181D),
+      ),
+      child: Text('No Data found!',
+          style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 18,
+              color: Colors.redAccent)));
+}
+Widget SocialActvites(_socialActData, context) {
+  return _socialActData.isNotEmpty
+      ? Container(
+    width: MediaQuery.of(context).size.width,
+    padding: EdgeInsets.all(10),
+    margin: EdgeInsets.fromLTRB(5, 5, 5, 5),
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(10),
+      color: Color(0xFF16181D),
+    ),
+    child: SingleChildScrollView(
+      physics: BouncingScrollPhysics(),
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          Container(
+            //     width: 300,
+            height: MediaQuery.of(context).size.height*0.3,
+            margin: EdgeInsets.only(right: 15),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20),
+              color: Color(0xFF16181D),
+            ),
+            child: ListView.builder(
+              shrinkWrap: true,
+              physics: BouncingScrollPhysics(),
+              scrollDirection: Axis.horizontal,
+              itemCount: _socialActData.length,
+              itemBuilder: (context, index) {
+                return Card(
+                    color: Color(0xFF16181D),
+                    child: Column(children: <Widget>[
+                      Stack(
+                          alignment: Alignment.center,
+                          children: <Widget>[
+                            Image.network(
+                              _socialActData[index]["image"]
+                                  .toString(),
+                              fit: BoxFit.cover,
+                              errorBuilder: (BuildContext context,
+                                  Object exception,
+                                  StackTrace stackTrace) {
+                                return Text('404 Not Found!');
+                              },
+                            ),
+                            Positioned(
+                              bottom: 1,
+                              child: Align(
+                                alignment: Alignment.center,
+                                child: Text(
+                                  getFormatedDate(_socialActData[index]["timestamp"]
+                                      .toString()),
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14,
+                                      color: Colors.white),
+                                  textAlign: TextAlign.center,
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 1,
+                                  softWrap: false,
+                                ),
+                              ),
+                            ),
+                          ]),
+                      Divider(
+                        thickness: 0.3,
+                        color: Colors.amber,
+                        height: 5,
+                      ),
+                      SizedBox(
+                        width: 200,
+                        child: Text(
+                          _socialActData[index]["title"].toString(),
+                          style: TextStyle(
+                              fontWeight: FontWeight.w400,
+                              fontSize: 10,
+                              color: Colors.white),
+                          textAlign: TextAlign.center,
+                          overflow: TextOverflow.clip,
+                          maxLines: 5,
+                          softWrap: true,
+                        ),
+                      ),
+                      SizedBox(
+                        width: 250,
+                        child: Text(
+                          _socialActData[index]["description"].toString(),
+                          style: TextStyle(
+                              fontWeight: FontWeight.w200,
+                              fontSize: 8,
+                              color: Colors.white),
+                          textAlign: TextAlign.center,
+                          overflow: TextOverflow.clip,
+                          maxLines: 5,
+                          softWrap: true,
+                        ),
+                      )
+                    ]));
+              },
+            ),
+          ),
+        ],
+      ),
+    ),
+  )
+      : Container(
+    width: 150,
+    height: 150,
+    margin: EdgeInsets.only(right: 25),
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(20),
+      color: Colors.redAccent,
+    ),
+    child: Column(
+      children: <Widget>[
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Image(
+            image: AssetImage(
+              "images/noimage.jpg",
+            ),
+            width: 50,
+            height: 50,
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(
+            left: 10,
+            right: 10,
+          ),
+          child: Text(
+            "Nothing found",
+            style: GoogleFonts.lato(
+              fontSize: 13,
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+getFormatedDate(_date) {
+  var inputFormat = DateFormat('yyyy-MM-dd HH:mm');
+  var inputDate = inputFormat.parse(_date);
+  var outputFormat = DateFormat('MMMM, yyyy');
+  return outputFormat.format(inputDate);
+}
 Widget galleryPicture(_imageData, context) {
 
 
@@ -411,12 +871,17 @@ Widget galleryPicture(_imageData, context) {
               padding: EdgeInsets.all(3),
               child: GestureDetector(
                 onTap: (){
-                  CustomDailog(context,_imageData[index]['title'], _imageData[index]['Description'], true,_imageData[index]['desc_img'] );
+                  CustomDailog(context,_imageData[index]['title'],
+                     "",
+                     // _imageData[index]['Description'].i,
+                      true,
+                      _imageData[index]['image']
+                  );
                 },
-                child: Image.network(_imageData[index]['desc_img'],
+                child: Image.network(_imageData[index]['image'],
                   fit: BoxFit.fill,
-                  height: 100.0,
-                  width: 100.0,),
+                  height: 120.0,
+                  width: 120.0,),
               ),
             );
           },
@@ -484,23 +949,7 @@ Widget profilTitle = Container(
   ),
 );
 
-Widget BioDesc = Container(
-  width: double.infinity,
-  padding: EdgeInsets.all(25),
-  margin: EdgeInsets.fromLTRB(20, 20, 20, 20),
-  decoration: BoxDecoration(
-    borderRadius: BorderRadius.circular(20),
-    color: Color(0xFFEFC777),
-  ),
-  child: Text(
-    "নিজের ব্যাপারে সর্বোচ্চ ২০০ শব্দে কিছু দেখাবে",
-    style: TextStyle(
-      color: Color(0xFF2C352D),
-      fontSize: 13,
-      fontWeight: FontWeight.w600,
-    ),
-  ),
-);
+
 
 Widget formationTitle = Container(
   alignment: Alignment.centerLeft,
@@ -538,105 +987,7 @@ Widget educationTitle = Container(
   ),
 );
 
-Widget education(_educationData, context) {
-  return _educationData.isNotEmpty
-      ? Container(
-          width: MediaQuery.of(context).size.width,
-          height: 200,
-          child: ListView.builder(
-            shrinkWrap: true,
-            physics: BouncingScrollPhysics(),
-            itemCount: _educationData.length,
-            itemBuilder: (context, index) {
-              return Card(
-                color: Colors.black54,
-                margin: const EdgeInsets.only(top: 5, left: 10, right: 10),
-                child: ListTile(
-                  leading: Text(_educationData[index]["passingYear"],
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
-                          color: Colors.amber)),
-                  title: Text(_educationData[index]["educationLevel"],
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                          color: Colors.amber)),
-                  subtitle: Text(_educationData[index]["instituteName"],
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 10,
-                          color: Colors.white)),
-                ),
-              );
-            },
-          ),
-        )
-      : Container(
-          width: MediaQuery.of(context).size.width,
-          padding: EdgeInsets.all(20),
-          margin: EdgeInsets.fromLTRB(20, 10, 20, 5),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
-            color: Color(0xFF16181D),
-          ),
-          child: Text('No Data found!',
-              style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18,
-                  color: Colors.redAccent)));
-  ;
-}
 
-Widget politics(_politicsData, context) {
-  return _politicsData.isNotEmpty
-      ? Container(
-          width: MediaQuery.of(context).size.width,
-          height: 200,
-          child: ListView.builder(
-            shrinkWrap: true,
-            physics: BouncingScrollPhysics(),
-            itemCount: _politicsData.length,
-            itemBuilder: (context, index) {
-              return Card(
-                color: Colors.black54,
-                elevation: 0,
-                margin: const EdgeInsets.only(top: 5, left: 10, right: 10),
-                child: ListTile(
-                  leading: Text(_politicsData[index]["fromyear"],
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
-                          color: Colors.amber)),
-                  title: Text(_politicsData[index]["level"],
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                          color: Colors.amber)),
-                  subtitle: Text(_politicsData[index]["party"],
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 10,
-                          color: Colors.white)),
-                ),
-              );
-            },
-          ),
-        )
-      : Container(
-          width: MediaQuery.of(context).size.width,
-          padding: EdgeInsets.all(20),
-          margin: EdgeInsets.fromLTRB(20, 10, 20, 5),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
-            color: Color(0xFF16181D),
-          ),
-          child: Text('No Data found!',
-              style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18,
-                  color: Colors.redAccent)));
-}
 
 Widget competenceTitle = Container(
   alignment: Alignment.centerLeft,
@@ -656,150 +1007,7 @@ Widget competenceTitle = Container(
   ),
 );
 
-Widget SocialActvites(_socialActData, context) {
-  return _socialActData.isNotEmpty
-      ? Container(
-          width: MediaQuery.of(context).size.width,
-          padding: EdgeInsets.all(10),
-          margin: EdgeInsets.fromLTRB(5, 5, 5, 5),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            color: Color(0xFF16181D),
-          ),
-          child: SingleChildScrollView(
-            physics: BouncingScrollPhysics(),
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Container(
-                  //     width: 300,
-                  height: 250,
-                  margin: EdgeInsets.only(right: 15),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    color: Color(0xFF16181D),
-                  ),
-                  child: ListView.builder(
-                    shrinkWrap: true,
-                    physics: BouncingScrollPhysics(),
-                    scrollDirection: Axis.horizontal,
-                    itemCount: _socialActData.length,
-                    itemBuilder: (context, index) {
-                      return Card(
-                          color: Color(0xFF16181D),
-                          child: Column(children: <Widget>[
-                            Stack(
-                                alignment: Alignment.center,
-                                children: <Widget>[
-                                  Image.network(
-                                    _socialActData[index]["imagesoruce"]
-                                        .toString(),
-                                    fit: BoxFit.fill,
-                                    errorBuilder: (BuildContext context,
-                                        Object exception,
-                                        StackTrace stackTrace) {
-                                      return Text('404 Not Found!');
-                                    },
-                                  ),
-                                  Positioned(
-                                    bottom: 1,
-                                    child: Align(
-                                      alignment: Alignment.center,
-                                      child: Text(
-                                        _socialActData[index]["timestamp"]
-                                            .toString(),
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 14,
-                                            color: Colors.white),
-                                        textAlign: TextAlign.center,
-                                        overflow: TextOverflow.ellipsis,
-                                        maxLines: 1,
-                                        softWrap: false,
-                                      ),
-                                    ),
-                                  ),
-                                ]),
-                            Divider(
-                              thickness: 0.3,
-                              color: Colors.amber,
-                              height: 5,
-                            ),
-                            SizedBox(
-                              width: 200,
-                              child: Text(
-                                _socialActData[index]["title"].toString(),
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: 10,
-                                    color: Colors.white),
-                                textAlign: TextAlign.center,
-                                overflow: TextOverflow.clip,
-                                maxLines: 5,
-                                softWrap: true,
-                              ),
-                            ),
-                            SizedBox(
-                              width: 250,
-                              child: Text(
-                                _socialActData[index]["description"].toString(),
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w200,
-                                    fontSize: 8,
-                                    color: Colors.white),
-                                textAlign: TextAlign.center,
-                                overflow: TextOverflow.clip,
-                                maxLines: 5,
-                                softWrap: true,
-                              ),
-                            )
-                          ]));
-                    },
-                  ),
-                ),
-              ],
-            ),
-          ),
-        )
-      : Container(
-          width: 150,
-          height: 150,
-          margin: EdgeInsets.only(right: 25),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
-            color: Colors.redAccent,
-          ),
-          child: Column(
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Image(
-                  image: AssetImage(
-                    "images/noimage.jpg",
-                  ),
-                  width: 50,
-                  height: 50,
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(
-                  left: 10,
-                  right: 10,
-                ),
-                child: Text(
-                  "Nothing found",
-                  style: GoogleFonts.lato(
-                    fontSize: 13,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        );
-}
+
 
 Widget TimelineTitle = Container(
   alignment: Alignment.centerLeft,
@@ -820,57 +1028,9 @@ Widget TimelineTitle = Container(
 );
 
 Widget TimelineWidget(_timelineData, context) {
-  return _timelineData.isNotEmpty
-      ? Container(
-          width: MediaQuery.of(context).size.width * 0.9,
-          // height: 240,
-          child: //HorizontalTimeline()
-              Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TimelineTile(
-                alignment: TimelineAlign.center,
-                isFirst: true,
-                indicatorStyle: IndicatorStyle(
-                  width: 40,
-                  color: Colors.purple,
-                  padding: const EdgeInsets.all(8),
-                  iconStyle: IconStyle(
-                    color: Colors.white,
-                    iconData: Icons.insert_emoticon,
-                  ),
-                ),
-                startChild: Container(
-                  constraints: const BoxConstraints(
-                    minHeight: 120,
-                  ),
-                  color: Colors.amberAccent,
-                ),
-              ),
-              TimelineTile(
-                alignment: TimelineAlign.center,
-                isLast: true,
-                indicatorStyle: IndicatorStyle(
-                  width: 30,
-                  color: Colors.red,
-                  indicatorXY: 0.7,
-                  iconStyle: IconStyle(
-                    color: Colors.white,
-                    iconData: Icons.thumb_up,
-                  ),
-                ),
-                endChild: Container(
-                  constraints: const BoxConstraints(
-                    minHeight: 80,
-                  ),
-                  color: Colors.lightGreenAccent,
-                ),
-              ),
-            ],
-          ))
-      : Container(
-          child: Text('NO DATA FOUND'),
-        );
+  return Container(
+    child: Text('Your time line data'),
+  ) ;
   //childHorizontal: HorizontalTimeline();
 }
 
@@ -1007,8 +1167,9 @@ Widget contatcTitle = Container(
   ),
 );
 
-Widget contact = Container(
-  width: 1000,
+Widget contact (context, TextEditingController nameEditController, TextEditingController emailEditController, TextEditingController subjectEditConroller, TextEditingController messageBodyConroller){
+return Container(
+  width: MediaQuery.of(context).size.width,
   padding: EdgeInsets.all(25),
   margin: EdgeInsets.fromLTRB(0, 20, 0, 0),
   decoration: BoxDecoration(
@@ -1018,100 +1179,92 @@ Widget contact = Container(
     ),
     color: Color(0xFF8AC185),
   ),
-  child: Row(
-    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    children: <Widget>[
-      Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: <Widget>[
-          Container(
-            margin: EdgeInsets.fromLTRB(3, 0, 0, 0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  "Adresse",
-                  style: GoogleFonts.lato(
-                    fontSize: 20,
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                Text(
-                  Globalinfo.address,
-                  style: GoogleFonts.lato(
-                    fontSize: 15,
-                    color: Color(0xFF4E634E),
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ],
-            ),
+  child: Column(
+      //mainAxisAlignment: MainAxisAlignment.spaceBetween,
+   // crossAxisAlignment: CrossAxisAlignment.baseline,
+    children:
+    [
+        Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: <Widget>[
+
+        Expanded(
+          child: CustomTextField(
+            baseColor: Colors.black,
+            borderColor: Colors.black,
+            errorColor: Colors.yellow,
+            controller: nameEditController,
+            hint: "Name",
+            inputType: TextInputType.text,
+
           ),
-          Padding(
-            padding: const EdgeInsets.only(top: 10),
-            child: Container(
-              // margin: EdgeInsets.fromLTRB(7, 0, 0, 0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    "Phone",
-                    style: GoogleFonts.lato(
-                      fontSize: 20,
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Text(
-                    Globalinfo.phonenumber,
-                    style: GoogleFonts.lato(
-                      fontSize: 15,
-                      color: Color(0xFF4E634E),
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 10),
-            child: Container(
-              //  margin: EdgeInsets.fromLTRB(7, 0, 0, 0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    "Email",
-                    style: GoogleFonts.lato(
-                      fontSize: 20,
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Text(
-                    Globalinfo.email,
-                    style: GoogleFonts.lato(
-                      fontSize: 15,
-                      color: Color(0xFF4E634E),
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
+        ),
+         Expanded(
+           child: CustomTextField(
+             baseColor: Colors.black,
+             borderColor: Colors.black,
+            errorColor: Colors.red,
+            controller: emailEditController,
+            hint: "Email",
+            inputType: TextInputType.emailAddress,
+
+        ),
+         )
+      ],
+    ),
+        CustomTextField(
+          baseColor: Colors.black,
+          borderColor: Colors.black,
+        errorColor: Colors.red,
+        controller: subjectEditConroller,
+        hint: "Subject",
+        inputType: TextInputType.text,
       ),
-      Container(
-        width: 150,
-        height: 150,
-        child: Lottie.asset('anim/scanning.json'),
+        CustomTextField(
+          baseColor: Colors.black,
+          borderColor: Colors.black,
+        errorColor: Colors.red,
+        controller: messageBodyConroller,
+        hint: "Message body",
+        minline: 1,
+        maxline: 5,
+        inputType: TextInputType.text,
       ),
-    ],
+      CustomButton(
+        onPressed: (){
+          SendMessage(nameEditController.text, emailEditController.text, subjectEditConroller.text, messageBodyConroller.text);
+          print('SEND');
+        },
+      ),
+  ]
   ),
 );
+}
+
+Future<MessageSend> SendMessage(String name, String email, String subject, String mbody) async {
+  print(name + email+subject+mbody);
+  
+  final response = await http.post(Uri.parse(GlobalAPI.sendMsg),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        'name': name,
+        'email': email,
+        'subject': subject,
+        'messagebody': mbody
+      }),
+  );
+  if(response.statusCode ==200){
+    return MessageSend.fromJson(jsonDecode(response.body));
+
+  }
+  else {
+    throw Exception('Failed to Send message.');
+  }
+
+
+}
 Widget vie = Container(
   width: double.infinity,
   padding: EdgeInsets.only(
@@ -1382,7 +1535,7 @@ CustomDailog(context,  String title, String descripiton , isZoom, String imgsrc)
 
           ],
         ),
-        color: Colors.amber,
+        color: Colors.black54,
         padding: EdgeInsets.all(20),
       ),
     ).show(context);

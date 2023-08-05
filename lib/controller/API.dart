@@ -18,4 +18,5 @@ class GlobalAPI {
   static String activityData = baseUrl+'api'+'/activity-data/'+languageEN;
   static String timelineData = baseUrl+'api'+'/timeline-data/'+languageEN;
   static String photoData = baseUrl+'api'+'/photo-data/'+languageEN;
+  static String sendMsg = baseUrl+'api'+'/send-message/'+languageEN;
 }
