@@ -899,7 +899,7 @@ Widget name = Container(
         child: ClipRRect(
           borderRadius: BorderRadius.circular(50.0),
           child: Image(
-            image: AssetImage('images/profilepic.jpg'),
+            image: AssetImage('images/profile.png'),
             height: 100,
             width: 100,
           ),

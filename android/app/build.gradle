@@ -47,6 +47,9 @@ apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
     lintOptions {
         disable 'InvalidPackage'
     }
+      aaptOptions {
+          cruncherEnabled = false
+      }
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
@@ -58,11 +61,17 @@ apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
     }
 
     signingConfigs {
+//        release {
+//            keyAlias keystoreProperties['nimjks']
+//            keyPassword keystoreProperties['keyPassword']
+//            storeFile file(keystoreProperties['storeFile'])
+//            storePassword keystoreProperties['storePassword']
+//        }
         release {
-            keyAlias keystoreProperties['keyAlias']
-            keyPassword keystoreProperties['keyPassword']
-            storeFile file(keystoreProperties['storeFile'])
-            storePassword keystoreProperties['storePassword']
+            storeFile file("E:\\Projects\\nazrul Islam Mollah\\personal_cv_flutter\\nimjks.jks")
+            storePassword "123456"
+            keyAlias "nimjks"
+            keyPassword "123456"
         }
     }
     buildTypes {
