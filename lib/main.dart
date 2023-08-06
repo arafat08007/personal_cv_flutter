@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:Nazrul_Islam_mollah/widget/CustomTextFeild.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
 //import 'package:flutter_fb_news/flutter_fb_news.dart';
 import 'package:Nazrul_Islam_mollah/view/PhotGallery.dart';
@@ -20,6 +21,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:ndialog/ndialog.dart';
 import 'package:timeline_tile/timeline_tile.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_custom_carousel_slider/flutter_custom_carousel_slider.dart';
 
 import 'controller/home_controller.dart';
@@ -220,18 +222,18 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> readTimelineJson() async {
     var edata;
-    print('Reading missions data, please wait...');
+    print('Reading Timeline data, please wait...');
     _timelineData.clear();
     try {
       // String response = await rootBundle.loadString('data/education.json');
       http.Response res = await http.get(Uri.parse(GlobalAPI.timelineData));
       if (res.statusCode == 200) {
         edata = await json.decode(res.body);
-        print ('missions api response/n') ;
+        print ('Timeline api response/n') ;
         print (edata);
       }
       setState(() {
-        _timelineData = edata["activities"];
+        _timelineData = edata["timelines"];
       });
     }
     catch (e){
@@ -312,6 +314,19 @@ class _HomePageState extends State<HomePage> {
         elevation: 0,
         backgroundColor: Color(0xFF023020),
         actions: <Widget>[
+          //fb
+          IconButton(
+            icon: Icon(
+              Icons.translate,
+              color: Colors.white,
+            ),
+            onPressed: () {
+              print('translation is ongoing ....');
+
+              // readEducationJson();
+              // do something
+            },
+          ),
           IconButton(
             icon: Icon(
               Icons.facebook_outlined,
@@ -326,29 +341,31 @@ class _HomePageState extends State<HomePage> {
           ),
           IconButton(
             icon: Icon(
-              Icons.deblur,
+              FontAwesome.youtube,
               color: Colors.white,
             ),
             onPressed: () {
               // do something
               print('Click whatsapp');
-              openWhatsapp("+8801717998754", "Hello Vi");
+              openWebsite("https://www.youtube.com/@nazrulislammollah14");
+              //openWhatsapp("+8801717998754", "Hello Vi");
             },
           ),
           IconButton(
             icon: Icon(
-              Icons.wordpress_rounded,
+              FontAwesome.globe,
               color: Colors.white,
             ),
             onPressed: () {
               // do something
               print('Click on open website');
-              openWebsite();
+              openWebsite("https://nazrulislammollah.com/en");
             },
           )
         ],
       ),
-      backgroundColor: Color(0xFF023020),
+    //  backgroundColor: Color(0xFF023020),
+      backgroundColor: Color (0XFFD2F0EA),
       body: SafeArea(
         child: SingleChildScrollView(
           physics: BouncingScrollPhysics(),
@@ -362,16 +379,23 @@ class _HomePageState extends State<HomePage> {
                 indent: 50,
                 endIndent: 50,
                 thickness: 0.3,
-                color: Colors.white,
+                color: Colors.grey,
               ),
               Qoute(_qouteData, context),
               Divider(
                 indent: 50,
                 endIndent: 50,
                 thickness: 0.3,
-                color: Colors.white,
+                color: Colors.grey,
               ),
+              MissionVisionTtile,
               MissionVision(_missionData,context),
+              Divider(
+                indent: 50,
+                endIndent: 50,
+                thickness: 0.5,
+                color: Colors.grey,
+              ),
               educationTitle,
               education(_educationData, context),
               formationTitle,
@@ -401,8 +425,8 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  void openWebsite() async {
-    final Uri url = Uri.parse('https://nazrulislammollah.com/');
+  void openWebsite(String s) async {
+    final Uri url = Uri.parse(s);
     if (!await launchUrl(url)) {
       throw Exception('Could not launch $url');
     }
@@ -446,10 +470,10 @@ Widget BioDesc (_BioDesc,context) {
     margin: EdgeInsets.fromLTRB(20, 20, 20, 20),
     decoration: BoxDecoration(
       borderRadius: BorderRadius.circular(20),
-      color: Color(0xFFEFC777),
+      color: Colors.white,
     ),
     child: (
-        Text(_BioDesc[0]["description"])
+        Text(_BioDesc[0]["description"].toString().trim(), textAlign: TextAlign.center,)
     ),
   ):
 
@@ -478,7 +502,7 @@ Widget Qoute(_qouteData, context) {
       ? Column(
           children: [
             Container(
-              color: Color(0xFF023020),
+             // color: Color(0xFF023020),
               height: MediaQuery.of(context).size.height * 0.13,
               width: MediaQuery.of(context).size.width * 0.9,
               child: Center(
@@ -502,18 +526,18 @@ Widget Qoute(_qouteData, context) {
                     return Container(
                       width: MediaQuery.of(context).size.width,
                       margin: EdgeInsets.symmetric(horizontal: 20.0),
-                      decoration: BoxDecoration(
-                        color: Color(0xFF023020),
-                      ),
+                      // decoration: BoxDecoration(
+                      //   color: Color(0xFF023020),
+                      // ),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            "\"${_qouteData[index]['description']}\"",
+                            "\"${_qouteData[index]['description'].toString().trim()}\"",
                             // The post description
                             style: TextStyle(
-                              fontSize: 11.0,
-                              color: Colors.white,
+                              fontSize: 14.0,
+                              color: Colors.black,
                             ),
                             textAlign: TextAlign.center,
                           ),
@@ -530,7 +554,7 @@ Widget Qoute(_qouteData, context) {
                 position: homeController.selectedIndex.value.toDouble(),
                 decorator: DotsDecorator(
                     color: Colors.white, // The inactive dot color
-                    activeColor: Colors.yellowAccent // The active dot color
+                    activeColor: Colors.grey // The active dot color
                     ),
               ),
             ),
@@ -540,27 +564,55 @@ Widget Qoute(_qouteData, context) {
           child: Text('NO QUOTE FOUND!'),
         );
 }
+Widget MissionVisionTtile = Container(
+  alignment: Alignment.centerLeft,
+  child: Padding(
+    padding: const EdgeInsets.only(
+      top: 20,
+      left: 30,
+    ),
+    child:
+    RichText(
+      text: TextSpan(
+        children: [
+          WidgetSpan(child: Icon(Icons.remove_red_eye_sharp, color:Color(0XFF002147), size: 24),),
+          // TextSpan( text:"\t রুপকল্প ও অভিলক্ষ্য",
+          //     style: GoogleFonts.lato(
+          //       fontSize: 20,
+          //       color: Color(0XFF002147),
+          //       fontWeight: FontWeight.bold,
+          //     )
+          //
+          // ),
+          TextSpan( text:"\t Mission & Vision",
+              style: GoogleFonts.lato(
+                fontSize: 22,
+                color: Color(0XFF002147),
+                fontWeight: FontWeight.bold,
+              )
+
+          ),
+        ],
+      ),
+    ),
+  ),
+);
 Widget MissionVision (_missionData , context) {
   return  _missionData.isNotEmpty?
   Container(
-    padding: EdgeInsets.only(top: 15),
+    padding: EdgeInsets.all(15),
     alignment: Alignment.topCenter,
     child: Column(
       children: [
-        Text(
-          'মিশন ও ভিশন',
-          textAlign: TextAlign.left,
-          style: TextStyle(
-              color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
-        ),
         SizedBox(
           height: 10,
         ),
-        Text(_missionData[0]["description"],
+        Text(_missionData[0]["description"].toString().trim(),
             textAlign: TextAlign.center,
             style: TextStyle(
-              color: Colors.white,
+              color: Color(0XFF1D539D),
             )),
+
       ],
     ),
   )
@@ -590,7 +642,7 @@ Widget MissionVision (_missionData , context) {
             indent: 50,
             endIndent: 50,
             thickness: 0.5,
-            color: Colors.amber,
+            color: Colors.grey,
           ),
           Text('Vision Text',
               textAlign: TextAlign.left,
@@ -604,32 +656,36 @@ Widget MissionVision (_missionData , context) {
 Widget education(_educationData, context) {
   return _educationData.isNotEmpty
       ? Container(
+    padding: EdgeInsets.only(left: 15, right: 15),
     width: MediaQuery.of(context).size.width,
-    height: 200,
+    height: 250,
     child: ListView.builder(
       shrinkWrap: true,
       physics: BouncingScrollPhysics(),
       itemCount: _educationData.length,
       itemBuilder: (context, index) {
         return Card(
-          color: Colors.black54,
+          elevation: 0,
+          color: Color(0XFFEBFFF3),
           margin: const EdgeInsets.only(top: 5, left: 10, right: 10),
           child: ListTile(
-            leading: Text(_educationData[index]["year"],
+            leading: Text(_educationData[index]["year"].toString().trim()+'\t |',
                 style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    fontSize: 18,
-                    color: Colors.amber)),
-             title: Text(_educationData[index]["title"],
+                    fontSize: 24,
+                    color: Color(0XFF1D3C78),
+                )
+            ),
+             title: Text(_educationData[index]["title"].toString().trim(),
                 style: TextStyle(
                      fontWeight: FontWeight.bold,
-                     fontSize: 16,
-                     color: Colors.amber)),
-            subtitle: Text(_educationData[index]["description"],
+                     fontSize: 18,
+                     color: Color(0XFF1D3C78),)),
+            subtitle: Text(_educationData[index]["description"].toString().trim(),
                 style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 10,
-                    color: Colors.white)),
+                    fontWeight: FontWeight.normal,
+                    fontSize: 14,
+                    color: Color(0XFF1D3C78),)),
           ),
         );
       },
@@ -654,6 +710,7 @@ Widget education(_educationData, context) {
 Widget politics(_politicsData, context) {
   return _politicsData.isNotEmpty
       ? Container(
+    padding: EdgeInsets.only(left:15,right: 15),
     width: MediaQuery.of(context).size.width,
     height: 200,
     child: ListView.builder(
@@ -662,25 +719,25 @@ Widget politics(_politicsData, context) {
       itemCount: _politicsData.length,
       itemBuilder: (context, index) {
         return Card(
-          color: Colors.black54,
+          color: Color(0XFFEBFFF3),
           elevation: 0,
           margin: const EdgeInsets.only(top: 5, left: 10, right: 10),
           child: ListTile(
-            leading: Text(_politicsData[index]["year"],
+            leading: Text(_politicsData[index]["year"].toString().trim()+'\t |',
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 22,
+                    color: Colors.black)),
+            title: Text(_politicsData[index]["title"].toString().trim(),
                 style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 18,
-                    color: Colors.amber)),
-            title: Text(_politicsData[index]["title"],
+                    color: Color(0XFF333333),)),
+            subtitle: Text(_politicsData[index]["description"].toString().trim(),
                 style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                    color: Colors.amber)),
-            subtitle: Text(_politicsData[index]["description"],
-                style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 10,
-                    color: Colors.white)),
+                    fontWeight: FontWeight.normal,
+                    fontSize: 14,
+                    color: Color(0XFF333333),)),
           ),
         );
       },
@@ -708,7 +765,7 @@ Widget SocialActvites(_socialActData, context) {
     margin: EdgeInsets.fromLTRB(5, 5, 5, 5),
     decoration: BoxDecoration(
       borderRadius: BorderRadius.circular(10),
-      color: Color(0xFF16181D),
+      color: Color(0xFFD2F0EA),
     ),
     child: SingleChildScrollView(
       physics: BouncingScrollPhysics(),
@@ -716,13 +773,12 @@ Widget SocialActvites(_socialActData, context) {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          Container(
-            //     width: 300,
-            height: MediaQuery.of(context).size.height*0.3,
-            margin: EdgeInsets.only(right: 15),
+          Container(            //     width: 300,
+            height: MediaQuery.of(context).size.height*0.45,
+           // margin: EdgeInsets.only(right: 15),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(20),
-              color: Color(0xFF16181D),
+              color: Color(0xFFD2F0EA),
             ),
             child: ListView.builder(
               shrinkWrap: true,
@@ -731,41 +787,35 @@ Widget SocialActvites(_socialActData, context) {
               itemCount: _socialActData.length,
               itemBuilder: (context, index) {
                 return Card(
-                    color: Color(0xFF16181D),
+                  elevation: 0,
+                    color: Color(0xFFFFFFFF),
                     child: Column(children: <Widget>[
-                      Stack(
-                          alignment: Alignment.center,
-                          children: <Widget>[
-                            Image.network(
-                              _socialActData[index]["image"]
-                                  .toString(),
-                              fit: BoxFit.cover,
-                              errorBuilder: (BuildContext context,
-                                  Object exception,
-                                  StackTrace stackTrace) {
-                                return Text('404 Not Found!');
-                              },
-                            ),
-                            Positioned(
-                              bottom: 1,
-                              child: Align(
-                                alignment: Alignment.center,
-                                child: Text(
-                                  getFormatedDate(_socialActData[index]["timestamp"]
-                                      .toString()),
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 14,
-                                      color: Colors.white),
-                                  textAlign: TextAlign.center,
-                                  overflow: TextOverflow.ellipsis,
-                                  maxLines: 1,
-                                  softWrap: false,
-                                ),
-                              ),
-                            ),
-                          ]),
+                      // Image.network(
+                      //
+                      //   _socialActData[index]["image"]
+                      //       .toString(),
+                      //   fit: BoxFit.fill,
+                      //
+                      //   errorBuilder: (BuildContext context,
+                      //       Object exception,
+                      //       StackTrace stackTrace) {
+                      //     return Text('404 Not Found!');
+                      //   },
+                      // ),
+                      
+                      CachedNetworkImage(
+                        fadeInDuration: Duration(milliseconds: 2000),
+                      width: MediaQuery.of(context).size.width*0.5,
+                        fit: BoxFit.fill,
+                        imageUrl:
+                        _socialActData[index]["image"].toString(),
+                        placeholder: (context, url) =>
+                        new CircularProgressIndicator(),
+                      ),
+
                       Divider(
+                        indent: 50,
+                        endIndent: 50,
                         thickness: 0.3,
                         color: Colors.amber,
                         height: 5,
@@ -773,29 +823,48 @@ Widget SocialActvites(_socialActData, context) {
                       SizedBox(
                         width: 200,
                         child: Text(
-                          _socialActData[index]["title"].toString(),
+                          _socialActData[index]["title"].toString().trim(),
                           style: TextStyle(
-                              fontWeight: FontWeight.w400,
-                              fontSize: 10,
-                              color: Colors.white),
+                              fontWeight: FontWeight.w600,
+                              fontSize: 18,
+                              color: Colors.black),
                           textAlign: TextAlign.center,
                           overflow: TextOverflow.clip,
                           maxLines: 5,
                           softWrap: true,
                         ),
                       ),
+                      Align(
+                        alignment: Alignment.center,
+                        child: Text(
+                          getFormatedDate(_socialActData[index]["timestamp"]
+                              .toString().trim()),
+                          style: TextStyle(
+                              fontWeight: FontWeight.normal,
+                              fontSize: 14,
+                              color: Colors.grey),
+                          textAlign: TextAlign.center,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                          softWrap: false,
+                        ),
+                      ),
+                      Divider(height: 5,),
                       SizedBox(
                         width: 250,
-                        child: Text(
-                          _socialActData[index]["description"].toString(),
-                          style: TextStyle(
-                              fontWeight: FontWeight.w200,
-                              fontSize: 8,
-                              color: Colors.white),
-                          textAlign: TextAlign.center,
-                          overflow: TextOverflow.clip,
-                          maxLines: 5,
-                          softWrap: true,
+                        child: Padding(
+                          padding: EdgeInsets.only(left: 5,top: 3,right: 5,bottom: 3),
+                          child: Text(
+                            _socialActData[index]["description"].toString().trim(),
+                            style: TextStyle(
+                                fontWeight: FontWeight.w400,
+                                fontSize: 12,
+                                color: Colors.black),
+                            textAlign: TextAlign.center,
+                            overflow: TextOverflow.clip,
+                            maxLines: 5,
+                            softWrap: true,
+                          ),
                         ),
                       )
                     ]));
@@ -909,21 +978,21 @@ Widget name = Container(
         indent: 50,
         endIndent: 50,
         thickness: 0.3,
-        color: Colors.white,
+        color: Colors.grey,
       ),
       Text(
-        "নজরুল ইসলাম মোল্লা",
+        "Nazrul Islam Mollah",
         style: GoogleFonts.lato(
           fontSize: 20,
-          color: Colors.yellow,
+          color:  Color(0XFF002147),
           fontWeight: FontWeight.bold,
         ),
       ),
       Text(
-        "ঢাকা-১৪",
+        "Political Analyst | Politician in Mirpur, Dhaka",
         style: GoogleFonts.lato(
-          fontSize: 18,
-          color: Color(0xFFFAFAFA),
+          fontSize: 12,
+          color:  Color(0XFF002147),
           fontWeight: FontWeight.bold,
         ),
       ),
@@ -938,14 +1007,21 @@ Widget profilTitle = Container(
       top: 20,
       left: 30,
     ),
-    child: Text(
-      "আমার সম্পর্কিত",
-      style: GoogleFonts.lato(
-        fontSize: 20,
-        color: Colors.white,
-        fontWeight: FontWeight.bold,
+    child: RichText(
+      text: TextSpan(
+        children: [
+          WidgetSpan(child: Icon(Icons.info, color:Color(0XFF002147), size: 20),),
+          TextSpan( text:"\t About",
+        style: GoogleFonts.lato(
+          fontSize: 22,
+          color: Color(0XFF002147),
+          fontWeight: FontWeight.bold,
+        )
+
       ),
+      ],
     ),
+  ),
   ),
 );
 
@@ -955,15 +1031,31 @@ Widget formationTitle = Container(
   alignment: Alignment.centerLeft,
   child: Padding(
     padding: const EdgeInsets.only(
-      top: 10,
+      top: 20,
       left: 30,
     ),
-    child: Text(
-      "রাজনীতি",
-      style: GoogleFonts.lato(
-        fontSize: 20,
-        color: Colors.white,
-        fontWeight: FontWeight.bold,
+    child:
+    RichText(
+      text: TextSpan(
+        children: [
+          WidgetSpan(child: Icon(Icons.business_sharp, color:Color(0XFF002147), size: 24),),
+          // TextSpan( text:"\t রাজনীতি",
+          //     style: GoogleFonts.lato(
+          //       fontSize: 20,
+          //       color: Color(0XFF002147),
+          //       fontWeight: FontWeight.bold,
+          //     )
+          //
+          // ),
+          TextSpan( text:"\t Politics",
+              style: GoogleFonts.lato(
+                fontSize: 22,
+                color: Color(0XFF002147),
+                fontWeight: FontWeight.bold,
+              )
+
+          ),
+        ],
       ),
     ),
   ),
@@ -976,19 +1068,34 @@ Widget educationTitle = Container(
       top: 20,
       left: 30,
     ),
-    child: Text(
-      "শিক্ষাগত যোগ্যতা",
-      style: GoogleFonts.lato(
-        fontSize: 20,
-        color: Colors.white,
-        fontWeight: FontWeight.bold,
-      ),
+ child: RichText(
+    text: TextSpan(
+      children: [
+        WidgetSpan(child: Icon(Icons.school, color:Color(0XFF002147), size: 24),),
+        // TextSpan( text:"\t শিক্ষা",
+        //     style: GoogleFonts.lato(
+        //       fontSize: 20,
+        //       color: Color(0XFF002147),
+        //       fontWeight: FontWeight.bold,
+        //     )
+        //
+        // ),
+        TextSpan( text:"\t Education",
+            style: GoogleFonts.lato(
+              fontSize: 22,
+              color: Color(0XFF002147),
+              fontWeight: FontWeight.bold,
+            )
+
+        ),
+      ],
     ),
   ),
+  )
 );
 
 
-
+           //সামাজিক কর্মকান্ড
 Widget competenceTitle = Container(
   alignment: Alignment.centerLeft,
   child: Padding(
@@ -996,12 +1103,28 @@ Widget competenceTitle = Container(
       top: 20,
       left: 30,
     ),
-    child: Text(
-      "সামাজিক কর্ম",
-      style: GoogleFonts.lato(
-        fontSize: 20,
-        color: Colors.white,
-        fontWeight: FontWeight.bold,
+    child:
+    RichText(
+      text: TextSpan(
+        children: [
+          WidgetSpan(child: Icon(Icons.local_activity, color:Color(0XFF002147), size: 24),),
+          // TextSpan( text:"\t সামাজিক কর্মকান্ড",
+          //     style: GoogleFonts.lato(
+          //       fontSize: 20,
+          //       color: Color(0XFF002147),
+          //       fontWeight: FontWeight.bold,
+          //     )
+          //
+          // ),
+          TextSpan( text:"\t Social Activities",
+              style: GoogleFonts.lato(
+                fontSize: 22,
+                color: Color(0XFF002147),
+                fontWeight: FontWeight.bold,
+              )
+
+          ),
+        ],
       ),
     ),
   ),
@@ -1016,25 +1139,183 @@ Widget TimelineTitle = Container(
       top: 20,
       left: 30,
     ),
-    child: Text(
-      "টাইমলাইন",
-      style: GoogleFonts.lato(
-        fontSize: 20,
-        color: Colors.white,
-        fontWeight: FontWeight.bold,
+    child:
+    RichText(
+      text: TextSpan(
+        children: [
+          WidgetSpan(child: Icon(Icons.timelapse_rounded, color:Color(0XFF002147), size: 24),),
+          // TextSpan( text:"\t টাইমলাইন",
+          //     style: GoogleFonts.lato(
+          //       fontSize: 20,
+          //       color: Color(0XFF002147),
+          //       fontWeight: FontWeight.bold,
+          //     )
+          //
+          // ),
+          TextSpan( text:"\t Timeline",
+              style: GoogleFonts.lato(
+                fontSize: 22,
+                color: Color(0XFF002147),
+                fontWeight: FontWeight.bold,
+              )
+
+          ),
+        ],
       ),
     ),
   ),
 );
 
 Widget TimelineWidget(_timelineData, context) {
-  return Container(
-    child: Text('Data fetching ... \n please wait...', style: GoogleFonts.lato(
-      fontSize: 20,
-      color: Colors.white,
-      fontWeight: FontWeight.bold,
-    ),),
-  ) ;
+  //print('Timeline data count >>>>'+_timelineData.length)   ;
+
+  return _timelineData.isNotEmpty
+      ? Container(
+    width: MediaQuery.of(context).size.width,
+    padding: EdgeInsets.all(10),
+    margin: EdgeInsets.fromLTRB(5, 5, 5, 5),
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(10),
+      color: Color(0xFFD2F0EA),
+    ),
+    child: SingleChildScrollView(
+      physics: BouncingScrollPhysics(),
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          Container(
+         //   padding: EdgeInsets.all(value),//     width: 300,
+            height: MediaQuery.of(context).size.height*0.15,
+            // margin: EdgeInsets.only(right: 15),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20),
+            // border:
+             // color: Color(0xFFD2F0EA),
+            ),
+            child: ListView.builder(
+              shrinkWrap: true,
+              physics: BouncingScrollPhysics(),
+              scrollDirection: Axis.horizontal,
+              itemCount: _timelineData.length,
+              itemBuilder: (context, index) {
+                return Card(
+                    clipBehavior: Clip.antiAlias,
+                    elevation: 0,
+                    color: Colors.transparent,
+                    shape: StadiumBorder(
+                    side: BorderSide(
+                    color: Colors.black,
+                    width: 1.0,
+                ),),
+                    //color: Color(0xFFFFECEFF),
+                    child: Container(
+                      padding: EdgeInsetsDirectional.all(10),
+                      child: Column(children: <Widget>[
+                        // _timelineData[index]["icon"].toString()
+                        //Icon(FontAwesome._timelineData[index]["icon"].toString()),
+                        Align(
+                          alignment: Alignment.center,
+                          child: Text(
+                            _timelineData[index]["year"]
+                                .toString().trim(),
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                                color: Colors.green),
+                            textAlign: TextAlign.center,
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                            softWrap: false,
+                          ),
+                        ),
+                        Divider(
+                          height: 5,
+                          indent: 50,
+                          endIndent: 50,
+                          thickness: 0.3,
+                          color: Colors.black,
+                        ),
+                        SizedBox(
+                          width: 200,
+                          child: Text(
+                            _timelineData[index]["title"].toString().trim(),
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 15,
+                                color: Colors.black),
+                            textAlign: TextAlign.center,
+                            overflow: TextOverflow.clip,
+                            maxLines: 5,
+                            softWrap: true,
+                          ),
+                        ),
+
+
+                        
+                        SizedBox(
+                          width: 250,
+                          child: Padding(
+                            padding: EdgeInsets.only(left: 5,top: 3,right: 5,bottom: 3),
+                            child: Text(
+                              _timelineData[index]["description"].toString().trim(),
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 12,
+                                  color: Colors.black),
+                              textAlign: TextAlign.center,
+                              overflow: TextOverflow.clip,
+                              maxLines: 5,
+                              softWrap: true,
+                            ),
+                          ),
+                        )
+                      ]),
+                    ));
+              },
+            ),
+          ),
+        ],
+      ),
+    ),
+  )
+      : Container(
+    width: 150,
+    height: 150,
+    margin: EdgeInsets.only(right: 25),
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(20),
+      color: Colors.redAccent,
+    ),
+    child: Column(
+      children: <Widget>[
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Image(
+            image: AssetImage(
+              "images/noimage.jpg",
+            ),
+            width: 50,
+            height: 50,
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(
+            left: 10,
+            right: 10,
+          ),
+          child: Text(
+            "Nothing found",
+            style: GoogleFonts.lato(
+              fontSize: 13,
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
   //childHorizontal: HorizontalTimeline();
 }
 
@@ -1045,12 +1326,28 @@ Widget PhotoGalleryTitle = Container(
       top: 20,
       left: 30,
     ),
-    child: Text(
-      "ফটো গ্যালারী",
-      style: GoogleFonts.lato(
-        fontSize: 20,
-        color: Colors.white,
-        fontWeight: FontWeight.bold,
+    child:
+    RichText(
+      text: TextSpan(
+        children: [
+          WidgetSpan(child: Icon(Icons.photo_album, color:Color(0XFF002147), size: 24),),
+          // TextSpan( text:"\t ছবি গ্যালারী",
+          //     style: GoogleFonts.lato(
+          //       fontSize: 20,
+          //       color: Color(0XFF002147),
+          //       fontWeight: FontWeight.bold,
+          //     )
+          //
+          // ),
+          TextSpan( text:"\t Photo Gallery",
+              style: GoogleFonts.lato(
+                fontSize: 20,
+                color: Color(0XFF002147),
+                fontWeight: FontWeight.bold,
+              )
+
+          ),
+        ],
       ),
     ),
   ),
@@ -1161,12 +1458,28 @@ Widget contatcTitle = Container(
       top: 20,
       left: 30,
     ),
-    child: Text(
-      "যোগাযোগ",
-      style: GoogleFonts.lato(
-        fontSize: 20,
-        color: Colors.white,
-        fontWeight: FontWeight.bold,
+    child:
+    RichText(
+      text: TextSpan(
+        children: [
+          WidgetSpan(child: Icon(Icons.contact_phone_rounded, color:Color(0XFF002147), size: 24),),
+          // TextSpan( text:"\t যোগাযোগ",
+          //     style: GoogleFonts.lato(
+          //       fontSize: 20,
+          //       color: Color(0XFF002147),
+          //       fontWeight: FontWeight.bold,
+          //     )
+          //
+          // ),
+          TextSpan( text:"\t Contact",
+              style: GoogleFonts.lato(
+                fontSize: 22,
+                color: Color(0XFF002147),
+                fontWeight: FontWeight.bold,
+              )
+
+          ),
+        ],
       ),
     ),
   ),
@@ -1528,13 +1841,13 @@ CustomDailog(context,  String title, String descripiton , isZoom, String imgsrc)
 
         child: Column(
           children: [
-            Text(dailogTitle),
+            Text(dailogTitle, style: TextStyle(color: Colors.white, fontSize: 16), textAlign: TextAlign.center,),
             Divider(),
           Image.network(img,
           fit: BoxFit.fill,
           height: 200.0,
           width: 200.0,),
-            Text(dailogDesc),
+            Text(dailogDesc,style: TextStyle(color: Colors.white, fontSize: 12), textAlign: TextAlign.center,),
 
 
 
