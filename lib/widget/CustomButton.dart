@@ -24,9 +24,9 @@ class CustomButton extends StatelessWidget {
               width: 10.0,
             ),
             Text(
-              "Send your message",
+              "SEND  MESSAGE",
               maxLines: 1,
-              style: TextStyle(color: Colors.white),
+              style: TextStyle(color: Colors.amber),
             ),
           ],
         ),

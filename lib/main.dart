@@ -312,13 +312,13 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: Color(0xFF023020),
+        backgroundColor:Color(0XFFD2F0EA), // Color(0xFF023020),
         actions: <Widget>[
           //fb
           IconButton(
             icon: Icon(
               Icons.translate,
-              color: Colors.white,
+              color: Colors.black,
             ),
             onPressed: () {
               print('translation is ongoing ....');
@@ -330,7 +330,7 @@ class _HomePageState extends State<HomePage> {
           IconButton(
             icon: Icon(
               Icons.facebook_outlined,
-              color: Colors.white,
+              color: Colors.black,
             ),
             onPressed: () {
               print('Fb button clicked');
@@ -342,7 +342,7 @@ class _HomePageState extends State<HomePage> {
           IconButton(
             icon: Icon(
               FontAwesome.youtube,
-              color: Colors.white,
+              color: Colors.black,
             ),
             onPressed: () {
               // do something
@@ -354,7 +354,7 @@ class _HomePageState extends State<HomePage> {
           IconButton(
             icon: Icon(
               FontAwesome.globe,
-              color: Colors.white,
+              color: Colors.black,
             ),
             onPressed: () {
               // do something
@@ -473,7 +473,7 @@ Widget BioDesc (_BioDesc,context) {
       color: Colors.white,
     ),
     child: (
-        Text(_BioDesc[0]["description"].toString().trim(), textAlign: TextAlign.center,)
+        Text(_BioDesc[0]["description"].toString().trim(), textAlign: TextAlign.justify, style: TextStyle(fontSize: 14, height: 1.5), )
     ),
   ):
 
@@ -658,13 +658,14 @@ Widget education(_educationData, context) {
       ? Container(
     padding: EdgeInsets.only(left: 15, right: 15),
     width: MediaQuery.of(context).size.width,
-    height: 250,
+    height:  MediaQuery.of(context).size.height*0.3,
     child: ListView.builder(
       shrinkWrap: true,
       physics: BouncingScrollPhysics(),
       itemCount: _educationData.length,
       itemBuilder: (context, index) {
         return Card(
+          clipBehavior: Clip.antiAliasWithSaveLayer,
           elevation: 0,
           color: Color(0XFFEBFFF3),
           margin: const EdgeInsets.only(top: 5, left: 10, right: 10),
@@ -679,12 +680,12 @@ Widget education(_educationData, context) {
              title: Text(_educationData[index]["title"].toString().trim(),
                 style: TextStyle(
                      fontWeight: FontWeight.bold,
-                     fontSize: 18,
+                     fontSize: 22,
                      color: Color(0XFF1D3C78),)),
             subtitle: Text(_educationData[index]["description"].toString().trim(),
                 style: TextStyle(
                     fontWeight: FontWeight.normal,
-                    fontSize: 14,
+                    fontSize: 16,
                     color: Color(0XFF1D3C78),)),
           ),
         );
@@ -712,7 +713,7 @@ Widget politics(_politicsData, context) {
       ? Container(
     padding: EdgeInsets.only(left:15,right: 15),
     width: MediaQuery.of(context).size.width,
-    height: 200,
+    height:  MediaQuery.of(context).size.height*0.3,
     child: ListView.builder(
       shrinkWrap: true,
       physics: BouncingScrollPhysics(),
@@ -805,12 +806,14 @@ Widget SocialActvites(_socialActData, context) {
                       
                       CachedNetworkImage(
                         fadeInDuration: Duration(milliseconds: 2000),
+
                       width: MediaQuery.of(context).size.width*0.5,
                         fit: BoxFit.fill,
                         imageUrl:
                         _socialActData[index]["image"].toString(),
                         placeholder: (context, url) =>
                         new CircularProgressIndicator(),
+                        errorWidget: (context, url, error) => Icon(Icons.error),
                       ),
 
                       Divider(
@@ -965,13 +968,22 @@ Widget name = Container(
   child: Column(
     children: <Widget>[
       Center(
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(50.0),
-          child: Image(
-            image: AssetImage('images/profile.png'),
-            height: 100,
-            width: 100,
-          ),
+        child: Container(
+          width: 150,
+          height: 150,
+    // decoration: BoxDecoration(
+    //   gradient: const LinearGradient(
+    //     begin: Alignment.topLeft,
+    //     end: Alignment.bottomRight,
+    //     colors: [ Color(0xFF846AFF), Color(0xFF755EE8), Colors.purpleAccent,Colors.amber,],
+    //   ),
+    //   borderRadius: BorderRadius.circular(70),
+    // ),
+          child: CircleAvatar(
+            backgroundColor: Colors.white,
+               radius: 48, // Image radius
+               backgroundImage: AssetImage('./images/profile.png'),
+             ),
         ),
       ),
       Divider(
@@ -983,7 +995,7 @@ Widget name = Container(
       Text(
         "Nazrul Islam Mollah",
         style: GoogleFonts.lato(
-          fontSize: 20,
+          fontSize: 28,
           color:  Color(0XFF002147),
           fontWeight: FontWeight.bold,
         ),
@@ -991,7 +1003,7 @@ Widget name = Container(
       Text(
         "Political Analyst | Politician in Mirpur, Dhaka",
         style: GoogleFonts.lato(
-          fontSize: 12,
+          fontSize: 16,
           color:  Color(0XFF002147),
           fontWeight: FontWeight.bold,
         ),
@@ -1011,7 +1023,7 @@ Widget profilTitle = Container(
       text: TextSpan(
         children: [
           WidgetSpan(child: Icon(Icons.info, color:Color(0XFF002147), size: 20),),
-          TextSpan( text:"\t About",
+          TextSpan( text:"\t Bio",
         style: GoogleFonts.lato(
           fontSize: 22,
           color: Color(0XFF002147),
@@ -1033,6 +1045,7 @@ Widget formationTitle = Container(
     padding: const EdgeInsets.only(
       top: 20,
       left: 30,
+      bottom: 10,
     ),
     child:
     RichText(
@@ -1067,6 +1080,7 @@ Widget educationTitle = Container(
     padding: const EdgeInsets.only(
       top: 20,
       left: 30,
+      bottom: 10,
     ),
  child: RichText(
     text: TextSpan(
@@ -1102,6 +1116,7 @@ Widget competenceTitle = Container(
     padding: const EdgeInsets.only(
       top: 20,
       left: 30,
+      bottom: 10
     ),
     child:
     RichText(
@@ -1186,7 +1201,7 @@ Widget TimelineWidget(_timelineData, context) {
         children: <Widget>[
           Container(
          //   padding: EdgeInsets.all(value),//     width: 300,
-            height: MediaQuery.of(context).size.height*0.15,
+            height: MediaQuery.of(context).size.height*0.17,
             // margin: EdgeInsets.only(right: 15),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(20),
@@ -1200,17 +1215,30 @@ Widget TimelineWidget(_timelineData, context) {
               itemCount: _timelineData.length,
               itemBuilder: (context, index) {
                 return Card(
-                    clipBehavior: Clip.antiAlias,
+                    //clipBehavior: Clip.antiAlias,
                     elevation: 0,
-                    color: Colors.transparent,
-                    shape: StadiumBorder(
-                    side: BorderSide(
-                    color: Colors.black,
-                    width: 1.0,
-                ),),
+                    color: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    // Define how the card's content should be clipped
+                    clipBehavior: Clip.antiAliasWithSaveLayer,
+                //     shape: StadiumBorder(
+                //     side: BorderSide(
+                //     color: Colors.black,
+                //     width: 1.0,
+                // ),),
                     //color: Color(0xFFFFECEFF),
                     child: Container(
                       padding: EdgeInsetsDirectional.all(10),
+                      decoration: BoxDecoration(
+                          gradient: const LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomRight,
+                            colors: [ Color(0xFFFDC830), Color(0xFFF37335)],
+                          ),
+                      ),
+
                       child: Column(children: <Widget>[
                         // _timelineData[index]["icon"].toString()
                         //Icon(FontAwesome._timelineData[index]["icon"].toString()),
@@ -1221,8 +1249,9 @@ Widget TimelineWidget(_timelineData, context) {
                                 .toString().trim(),
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
-                                fontSize: 16,
-                                color: Colors.green),
+                                fontSize: 22,
+                              
+                                color: Colors.white),
                             textAlign: TextAlign.center,
                             overflow: TextOverflow.ellipsis,
                             maxLines: 1,
@@ -1242,7 +1271,7 @@ Widget TimelineWidget(_timelineData, context) {
                             _timelineData[index]["title"].toString().trim(),
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
-                                fontSize: 15,
+                                fontSize: 20,
                                 color: Colors.black),
                             textAlign: TextAlign.center,
                             overflow: TextOverflow.clip,
@@ -1325,6 +1354,7 @@ Widget PhotoGalleryTitle = Container(
     padding: const EdgeInsets.only(
       top: 20,
       left: 30,
+      bottom: 10
     ),
     child:
     RichText(
@@ -1353,103 +1383,6 @@ Widget PhotoGalleryTitle = Container(
   ),
 );
 
-Widget langueTitle = Container(
-  alignment: Alignment.centerLeft,
-  child: Padding(
-    padding: const EdgeInsets.only(
-      top: 20,
-      left: 30,
-    ),
-    child: Text(
-      "Compétence Linguistique",
-      style: GoogleFonts.lato(
-        fontSize: 25,
-        color: Colors.white,
-        fontWeight: FontWeight.bold,
-      ),
-    ),
-  ),
-);
-Widget langue = Container(
-  width: double.infinity,
-  padding: EdgeInsets.all(25),
-  margin: EdgeInsets.fromLTRB(20, 20, 20, 20),
-  decoration: BoxDecoration(
-    borderRadius: BorderRadius.circular(20),
-    color: Color(0xFF16181D),
-  ),
-  child: Row(
-    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    children: <Widget>[
-      Container(
-        child: Column(
-          children: <Widget>[
-            Text(
-              "Arabe",
-              style: GoogleFonts.lato(
-                fontSize: 20,
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            Text(
-              "Bilingue",
-              style: GoogleFonts.lato(
-                fontSize: 12,
-                color: Color(0xFF6E717E),
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ],
-        ),
-      ),
-      Container(
-        child: Column(
-          children: <Widget>[
-            Text(
-              "Francais",
-              style: GoogleFonts.lato(
-                fontSize: 20,
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            Text(
-              "TCF-C1",
-              style: GoogleFonts.lato(
-                fontSize: 12,
-                color: Color(0xFF6E717E),
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ],
-        ),
-      ),
-      Container(
-        child: Column(
-          children: <Widget>[
-            Text(
-              "Anglais",
-              style: GoogleFonts.lato(
-                fontSize: 20,
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            Text(
-              "Courant",
-              style: GoogleFonts.lato(
-                fontSize: 12,
-                color: Color(0xFF6E717E),
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ],
-        ),
-      ),
-    ],
-  ),
-);
 
 Widget contatcTitle = Container(
   alignment: Alignment.centerLeft,
@@ -1495,7 +1428,11 @@ return Container(
       topLeft: Radius.circular(20.0),
       topRight: Radius.circular(20.0),
     ),
-    color: Color(0xFF8AC185),
+    gradient: const LinearGradient(
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+      colors: [ Color(0xFFF2994A), Color(0xFFF2C94C)],
+    ),
   ),
   child: Column(
       //mainAxisAlignment: MainAxisAlignment.spaceBetween,
