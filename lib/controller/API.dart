@@ -10,6 +10,7 @@ class GlobalAPI {
   static String languageEN ='en';
   static String languageBN ='bn';
   static String baseUrl ="https://nazrulislammollah.com/";
+  //English---------------------------------------------------------
   static String bioData = baseUrl+'api'+'/bio-data/'+languageEN;
   static String quoteData = baseUrl+'api'+'/quote-data/'+languageEN;
   static String missionData = baseUrl+'api'+'/mission-data/'+languageEN;
@@ -19,4 +20,14 @@ class GlobalAPI {
   static String timelineData = baseUrl+'api'+'/timeline-data/'+languageEN;
   static String photoData = baseUrl+'api'+'/photo-data/'+languageEN;
   static String sendMsg = baseUrl+'api'+'/send-message/'+languageEN;
+  //bangla-------------------------------------------------------------
+  static String bioDataBN = baseUrl+'api'+'/bio-data/'+languageBN;
+  static String quoteDataBN = baseUrl+'api'+'/quote-data/'+languageBN;
+  static String missionDataBN = baseUrl+'api'+'/mission-data/'+languageBN;
+  static String educationDataBN = baseUrl+'api'+'/education-data/'+languageBN;
+  static String politicDataBN = baseUrl+'api'+'/politic-data/'+languageBN;
+  static String activityDataBN = baseUrl+'api'+'/activity-data/'+languageBN;
+  static String timelineDataBN = baseUrl+'api'+'/timeline-data/'+languageBN;
+  static String photoDataBN = baseUrl+'api'+'/photo-data/'+languageBN;
+  static String sendMsgBN = baseUrl+'api'+'/send-message/'+languageBN;
 }

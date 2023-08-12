@@ -36,6 +36,7 @@ import 'package:http/http.dart' as http;
 import './model/EducationDataModel.dart';
 import 'model/messageModel.dart';
 import 'widget/CustomButton.dart';
+import 'controller/LocalLanguageController.dart';
 
 void main() {
   runApp(MyApp());
@@ -44,16 +45,21 @@ void main() {
 class MyApp extends StatelessWidget {
   MyApp({Key key}) : super(key: key);
 
+
   // Fetch content from the json file
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
       debugShowCheckedModeBanner: false,
+      translations: LocaleString(),
+      locale: Locale('en','US'),
       home: HomePage(),
     );
   }
 }
+
+
 
 class HomePage extends StatefulWidget {
   HomePage({Key key}) : super(key: key);
@@ -76,9 +82,12 @@ class _HomePageState extends State<HomePage> {
   List _socialActData = [];
   List _postData = [];
   List _qouteData   = [];
-
   List _imagesData = [];
   List _missionData = [] ;
+  final List locale =[
+    {'name':'ENGLISH','locale': Locale('en','US')},
+    {'name':'বাংলা','locale': Locale('bn','BD')},
+  ];
 
 
   final dio = Dio();
@@ -282,6 +291,41 @@ class _HomePageState extends State<HomePage> {
     }
     print(_imagesData.length);
   }
+  //languge
+  buildLanguageDialog(BuildContext context){
+    showDialog(context: context,
+        builder: (builder){
+          return AlertDialog(
+            title: Text('Choose Your Language'),
+            content: Container(
+              width: double.maxFinite,
+              child: ListView.separated(
+                  shrinkWrap: true,
+                  itemBuilder: (context,index){
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: GestureDetector(child: Text(locale[index]['name']),onTap: (){
+                        print(locale[index]['name']);
+                        updateLanguage(locale[index]['locale']);
+                      },),
+                    );
+                  }, separatorBuilder: (context,index){
+                return Divider(
+                  color: Colors.blue,
+                );
+              }, itemCount: locale.length
+              ),
+            ),
+          );
+        }
+    );
+  }
+  updateLanguage(Locale locale){
+    print('Updating language  with \t ${locale}');
+
+    Get.updateLocale(locale);
+    Get.back();
+  }
 
   @override
   void initState() {
@@ -335,6 +379,7 @@ class _HomePageState extends State<HomePage> {
             ),
             onPressed: () {
               print('translation is ongoing ....');
+              buildLanguageDialog(context) ;
 
               // readEducationJson();
               // do something
@@ -1020,7 +1065,7 @@ Widget name = Container(
         color: Colors.grey,
       ),
       Text(
-        "Nazrul Islam Mollah",
+        "Nazrul Islam Mollah".tr,
         style: GoogleFonts.lato(
           fontSize: 28,
           color:  Color(0XFF002147),
@@ -1028,7 +1073,7 @@ Widget name = Container(
         ),
       ),
       Text(
-        "Political Analyst | Politician in Mirpur, Dhaka",
+        "Political Analyst | Politician in Mirpur, Dhaka".tr,
         style: GoogleFonts.lato(
           fontSize: 16,
           color:  Color(0XFF002147),
