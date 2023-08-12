@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:Nazrul_Islam_mollah/widget/CustomTextFeild.dart';
@@ -19,6 +20,8 @@ import 'package:lottie/lottie.dart';
 //import 'package:lottie/lottie.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:ndialog/ndialog.dart';
+import 'package:percent_indicator/circular_percent_indicator.dart';
+import 'package:step_progress_indicator/step_progress_indicator.dart';
 import 'package:timeline_tile/timeline_tile.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_icons/flutter_icons.dart';
@@ -83,7 +86,11 @@ class _HomePageState extends State<HomePage> {
   String fbPageId = "";
   String fbAccessTockent = "";
   String fbAppId = "2076096689448739";
+  bool _isLoading = true;
+  //progressindicatior
+   ValueNotifier<double> valueNotifier;
 
+  int keyForRepaint = 0;
   // Fetch content from the json file
   Future<void> readBioJson() async {
     var edata;
@@ -289,6 +296,12 @@ class _HomePageState extends State<HomePage> {
     readTimelineJson();
     readGalleryJson();
     readPostJson();
+    valueNotifier = ValueNotifier(0.0);
+    Timer(Duration(seconds: 7), () {
+      setState(() {
+        _isLoading = false;
+      });
+    });
 
     print("initState() called" );
   }
@@ -366,10 +379,31 @@ class _HomePageState extends State<HomePage> {
       ),
     //  backgroundColor: Color(0xFF023020),
       backgroundColor: Color (0XFFD2F0EA),
-      body: SafeArea(
+      body:  SafeArea(
         child: SingleChildScrollView(
           physics: BouncingScrollPhysics(),
-          child: Column(
+          child: _isLoading ? Align(
+         alignment: Alignment.center,
+            child: CircularPercentIndicator(
+              radius: 120.0,
+              lineWidth: 13.0,
+              animation: true,
+              animationDuration: 1200,
+              percent: 1.0,
+              center: new Text(
+                "100.0%",
+                style:
+                new TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
+              ),
+              footer: new Text(
+                "Loading data, please wait...",
+                style:
+                new TextStyle(fontWeight: FontWeight.bold, fontSize: 17.0),
+              ),
+              circularStrokeCap: CircularStrokeCap.round,
+              progressColor: Colors.purple,
+            ),
+          ):Column(
             children: <Widget>[
               SizedBox(height: 40),
               name,
@@ -536,8 +570,10 @@ Widget Qoute(_qouteData, context) {
                             "\"${_qouteData[index]['description'].toString().trim()}\"",
                             // The post description
                             style: TextStyle(
-                              fontSize: 14.0,
+                              fontSize: 16.0,
                               color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                              fontStyle: FontStyle.italic
                             ),
                             textAlign: TextAlign.center,
                           ),
@@ -610,6 +646,7 @@ Widget MissionVision (_missionData , context) {
         Text(_missionData[0]["description"].toString().trim(),
             textAlign: TextAlign.center,
             style: TextStyle(
+              fontSize: 16,
               color: Color(0XFF1D539D),
             )),
 
@@ -668,7 +705,7 @@ Widget education(_educationData, context) {
           clipBehavior: Clip.antiAliasWithSaveLayer,
           elevation: 0,
           color: Color(0XFFEBFFF3),
-          margin: const EdgeInsets.only(top: 5, left: 10, right: 10),
+          margin: const EdgeInsets.only(top: 5, left: 10, right: 10, bottom: 5),
           child: ListTile(
             leading: Text(_educationData[index]["year"].toString().trim()+'\t |',
                 style: TextStyle(
@@ -722,23 +759,23 @@ Widget politics(_politicsData, context) {
         return Card(
           color: Color(0XFFEBFFF3),
           elevation: 0,
-          margin: const EdgeInsets.only(top: 5, left: 10, right: 10),
+          margin: const EdgeInsets.only(top: 5, left: 10, right: 10, bottom: 5),
           child: ListTile(
             leading: Text(_politicsData[index]["year"].toString().trim()+'\t |',
                 style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    fontSize: 22,
-                    color: Colors.black)),
+                    fontSize: 24,
+                    color: Color(0XFF1D3C78))),
             title: Text(_politicsData[index]["title"].toString().trim(),
                 style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    fontSize: 18,
-                    color: Color(0XFF333333),)),
+                    fontSize: 22,
+                    color: Color(0XFF1D3C78),)),
             subtitle: Text(_politicsData[index]["description"].toString().trim(),
                 style: TextStyle(
                     fontWeight: FontWeight.normal,
-                    fontSize: 14,
-                    color: Color(0XFF333333),)),
+                    fontSize: 16,
+                    color: Color(0XFF1D3C78),)),
           ),
         );
       },
@@ -775,39 +812,29 @@ Widget SocialActvites(_socialActData, context) {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
           Container(            //     width: 300,
-            height: MediaQuery.of(context).size.height*0.45,
+            height: MediaQuery.of(context).size.height*0.6,
            // margin: EdgeInsets.only(right: 15),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20),
-              color: Color(0xFFD2F0EA),
-            ),
+
             child: ListView.builder(
               shrinkWrap: true,
               physics: BouncingScrollPhysics(),
               scrollDirection: Axis.horizontal,
               itemCount: _socialActData.length,
               itemBuilder: (context, index) {
-                return Card(
-                  elevation: 0,
-                    color: Color(0xFFFFFFFF),
+                return Container(
+                  margin: EdgeInsets.all(5),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      color: Colors.white70,
+                    ),
+                  
+                   // color: Colors.white70,
                     child: Column(children: <Widget>[
-                      // Image.network(
-                      //
-                      //   _socialActData[index]["image"]
-                      //       .toString(),
-                      //   fit: BoxFit.fill,
-                      //
-                      //   errorBuilder: (BuildContext context,
-                      //       Object exception,
-                      //       StackTrace stackTrace) {
-                      //     return Text('404 Not Found!');
-                      //   },
-                      // ),
                       
                       CachedNetworkImage(
                         fadeInDuration: Duration(milliseconds: 2000),
 
-                      width: MediaQuery.of(context).size.width*0.5,
+                      width: MediaQuery.of(context).size.width*0.7,
                         fit: BoxFit.fill,
                         imageUrl:
                         _socialActData[index]["image"].toString(),
@@ -821,10 +848,10 @@ Widget SocialActvites(_socialActData, context) {
                         endIndent: 50,
                         thickness: 0.3,
                         color: Colors.amber,
-                        height: 5,
+                        height: 10,
                       ),
                       SizedBox(
-                        width: 200,
+                        width:  MediaQuery.of(context).size.width*0.6,
                         child: Text(
                           _socialActData[index]["title"].toString().trim(),
                           style: TextStyle(
@@ -852,24 +879,24 @@ Widget SocialActvites(_socialActData, context) {
                           softWrap: false,
                         ),
                       ),
-                      Divider(height: 5,),
                       SizedBox(
-                        width: 250,
+                        width: MediaQuery.of(context).size.width*0.6,
                         child: Padding(
                           padding: EdgeInsets.only(left: 5,top: 3,right: 5,bottom: 3),
                           child: Text(
                             _socialActData[index]["description"].toString().trim(),
                             style: TextStyle(
                                 fontWeight: FontWeight.w400,
-                                fontSize: 12,
+                                fontSize: 14,
                                 color: Colors.black),
-                            textAlign: TextAlign.center,
+                            textAlign: TextAlign.justify,
                             overflow: TextOverflow.clip,
                             maxLines: 5,
                             softWrap: true,
                           ),
                         ),
-                      )
+                      ),
+                      Divider(height: 5,)
                     ]));
               },
             ),
@@ -1185,93 +1212,88 @@ Widget TimelineWidget(_timelineData, context) {
   //print('Timeline data count >>>>'+_timelineData.length)   ;
 
   return _timelineData.isNotEmpty
-      ? Container(
-    width: MediaQuery.of(context).size.width,
-    padding: EdgeInsets.all(10),
-    margin: EdgeInsets.fromLTRB(5, 5, 5, 5),
-    decoration: BoxDecoration(
-      borderRadius: BorderRadius.circular(10),
-      color: Color(0xFFD2F0EA),
-    ),
-    child: SingleChildScrollView(
-      physics: BouncingScrollPhysics(),
-      scrollDirection: Axis.horizontal,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          Container(
-         //   padding: EdgeInsets.all(value),//     width: 300,
-            height: MediaQuery.of(context).size.height*0.17,
-            // margin: EdgeInsets.only(right: 15),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20),
-            // border:
-             // color: Color(0xFFD2F0EA),
-            ),
-            child: ListView.builder(
-              shrinkWrap: true,
-              physics: BouncingScrollPhysics(),
-              scrollDirection: Axis.horizontal,
-              itemCount: _timelineData.length,
-              itemBuilder: (context, index) {
-                return Card(
-                    //clipBehavior: Clip.antiAlias,
-                    elevation: 0,
-                    color: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(4),
+      ? SingleChildScrollView(
+        physics: BouncingScrollPhysics(),
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Container(
+           //   padding: EdgeInsets.all(value),//     width: 300,
+              height: MediaQuery.of(context).size.height*0.20,
+              // margin: EdgeInsets.only(right: 15),
+
+              child: ListView.builder(
+                shrinkWrap: true,
+                physics: BouncingScrollPhysics(),
+                scrollDirection: Axis.horizontal,
+                itemCount: _timelineData.length,
+                itemBuilder: (context, index) {
+                  return Container(
+                    margin: EdgeInsets.only(left:5, right: 5, top:10),
+                    padding: EdgeInsetsDirectional.all(10),
+                    decoration: BoxDecoration(
+                      color: Colors.white70        ,
+                      borderRadius: BorderRadius.circular(10),
+                        // gradient: const LinearGradient(
+                        //   begin: Alignment.topCenter,
+                        //   end: Alignment.bottomRight,
+                        //   colors: [ Color(0xFFFDC830), Color(0xFFF37335)],
+                        // ),
                     ),
-                    // Define how the card's content should be clipped
-                    clipBehavior: Clip.antiAliasWithSaveLayer,
-                //     shape: StadiumBorder(
-                //     side: BorderSide(
-                //     color: Colors.black,
-                //     width: 1.0,
-                // ),),
-                    //color: Color(0xFFFFECEFF),
-                    child: Container(
-                      padding: EdgeInsetsDirectional.all(10),
-                      decoration: BoxDecoration(
-                          gradient: const LinearGradient(
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomRight,
-                            colors: [ Color(0xFFFDC830), Color(0xFFF37335)],
-                          ),
+
+                    child: Column(children: <Widget>[
+                      // _timelineData[index]["icon"].toString()
+                      //Icon(FontAwesome._timelineData[index]["icon"].toString()),
+                      Align(
+                        alignment: Alignment.center,
+                        child: Text(
+                          _timelineData[index]["year"]
+                              .toString().trim(),
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 28,
+
+                              color: Colors.grey),
+                          textAlign: TextAlign.center,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                          softWrap: false,
+                        ),
+                      ),
+                      Divider(
+                        height: 5,
+                        indent: 50,
+                        endIndent: 50,
+                        thickness: 0.5,
+                        color: Colors.black,
+                      ),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width*0.5,
+                        child: Text(
+                          _timelineData[index]["title"].toString().trim(),
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20,
+                              color: Colors.black),
+                          textAlign: TextAlign.center,
+                          overflow: TextOverflow.clip,
+                          maxLines: 5,
+                          softWrap: true,
+                        ),
                       ),
 
-                      child: Column(children: <Widget>[
-                        // _timelineData[index]["icon"].toString()
-                        //Icon(FontAwesome._timelineData[index]["icon"].toString()),
-                        Align(
-                          alignment: Alignment.center,
+
+
+                      SizedBox(
+                        width:   MediaQuery.of(context).size.width*0.5,
+                        child: Padding(
+                          padding: EdgeInsets.only(left: 5,top: 3,right: 5,bottom: 3),
                           child: Text(
-                            _timelineData[index]["year"]
-                                .toString().trim(),
+                            _timelineData[index]["description"].toString().trim(),
                             style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 22,
-                              
-                                color: Colors.white),
-                            textAlign: TextAlign.center,
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 1,
-                            softWrap: false,
-                          ),
-                        ),
-                        Divider(
-                          height: 5,
-                          indent: 50,
-                          endIndent: 50,
-                          thickness: 0.3,
-                          color: Colors.black,
-                        ),
-                        SizedBox(
-                          width: 200,
-                          child: Text(
-                            _timelineData[index]["title"].toString().trim(),
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 20,
+                                fontWeight: FontWeight.w400,
+                                fontSize: 12,
                                 color: Colors.black),
                             textAlign: TextAlign.center,
                             overflow: TextOverflow.clip,
@@ -1279,35 +1301,15 @@ Widget TimelineWidget(_timelineData, context) {
                             softWrap: true,
                           ),
                         ),
-
-
-                        
-                        SizedBox(
-                          width: 250,
-                          child: Padding(
-                            padding: EdgeInsets.only(left: 5,top: 3,right: 5,bottom: 3),
-                            child: Text(
-                              _timelineData[index]["description"].toString().trim(),
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w400,
-                                  fontSize: 12,
-                                  color: Colors.black),
-                              textAlign: TextAlign.center,
-                              overflow: TextOverflow.clip,
-                              maxLines: 5,
-                              softWrap: true,
-                            ),
-                          ),
-                        )
-                      ]),
-                    ));
-              },
+                      )
+                    ]),
+                  );
+                },
+              ),
             ),
-          ),
-        ],
-      ),
-    ),
-  )
+          ],
+        ),
+      )
       : Container(
     width: 150,
     height: 150,
@@ -1431,7 +1433,7 @@ return Container(
     gradient: const LinearGradient(
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
-      colors: [ Color(0xFFF2994A), Color(0xFFF2C94C)],
+      colors: [ Color(0xFF44A08D), Color(0xFF093637)],
     ),
   ),
   child: Column(
@@ -1445,8 +1447,8 @@ return Container(
 
         Expanded(
           child: CustomTextField(
-            baseColor: Colors.black,
-            borderColor: Colors.black,
+            baseColor: Colors.white,
+            borderColor: Colors.white,
             errorColor: Colors.yellow,
             controller: nameEditController,
             hint: "Name",
@@ -1456,8 +1458,8 @@ return Container(
         ),
          Expanded(
            child: CustomTextField(
-             baseColor: Colors.black,
-             borderColor: Colors.black,
+             baseColor: Colors.white,
+             borderColor: Colors.white,
             errorColor: Colors.red,
             controller: emailEditController,
             hint: "Email",
@@ -1468,16 +1470,16 @@ return Container(
       ],
     ),
         CustomTextField(
-          baseColor: Colors.black,
-          borderColor: Colors.black,
+          baseColor: Colors.white,
+          borderColor: Colors.white,
         errorColor: Colors.red,
         controller: subjectEditConroller,
         hint: "Subject",
         inputType: TextInputType.text,
       ),
         CustomTextField(
-          baseColor: Colors.black,
-          borderColor: Colors.black,
+          baseColor: Colors.white,
+          borderColor: Colors.white,
         errorColor: Colors.red,
         controller: messageBodyConroller,
         hint: "Message body",
@@ -1485,6 +1487,7 @@ return Container(
         maxline: 5,
         inputType: TextInputType.text,
       ),
+      SizedBox(height: 10,),
       CustomButton(
         onPressed: (){
           SendMessage(nameEditController.text, emailEditController.text, subjectEditConroller.text, messageBodyConroller.text);
