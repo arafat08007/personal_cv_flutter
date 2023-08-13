@@ -2,15 +2,19 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class CustomButton extends StatelessWidget {
-  CustomButton({@required this.onPressed});
+  CustomButton({@required this.onPressed,  this.buttonlebel});
   final GestureTapCallback onPressed;
+   String buttonlebel ='Send Message';
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: MediaQuery.of(context).size.width*0.6,
+    String btnTxt=buttonlebel;
+    return
+      SizedBox(
+      width: MediaQuery.of(context).size.width*0.3,
       height: MediaQuery.of(context).size.height*0.06,
-      child: RawMaterialButton(
+      child:
+      RawMaterialButton(
         elevation: 0,
 
 
@@ -29,8 +33,7 @@ class CustomButton extends StatelessWidget {
                 width: 5.0,
               ),
               Text(
-                "SEND  MESSAGE",
-                maxLines: 1,
+                "Send Message",
                 style: TextStyle(color: Colors.white),
               ),
             ],

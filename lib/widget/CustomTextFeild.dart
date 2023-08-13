@@ -11,6 +11,7 @@ class CustomTextField extends StatefulWidget {
   final bool obscureText;
   final int  minline;
   final int maxline;
+  final double fsize;
 
   final Function validator;
   final Function onChanged;
@@ -26,6 +27,7 @@ class CustomTextField extends StatefulWidget {
         this.obscureText = false,
         this.minline,
         this.maxline,
+        this.fsize,
         this.validator});
 
   _CustomTextFieldState createState() => _CustomTextFieldState();
@@ -71,6 +73,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
           controller: widget.controller,
           decoration: InputDecoration(
             hintStyle: TextStyle(
+              fontSize: widget.fsize,
               color: widget.baseColor,
               fontFamily: "OpenSans",
               fontWeight: FontWeight.w300,
