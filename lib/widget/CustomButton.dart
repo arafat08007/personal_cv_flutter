@@ -11,8 +11,8 @@ class CustomButton extends StatelessWidget {
     String btnTxt=buttonlebel;
     return
       SizedBox(
-      width: MediaQuery.of(context).size.width*0.3,
-      height: MediaQuery.of(context).size.height*0.06,
+      width: MediaQuery.of(context).size.width*0.4,
+      height: MediaQuery.of(context).size.height*0.07,
       child:
       RawMaterialButton(
         elevation: 0,

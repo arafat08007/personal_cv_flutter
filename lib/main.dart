@@ -534,10 +534,14 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
   void openFb() async {
     final Uri url = Uri.parse('https://www.facebook.com/Dhaka14NazrulIslamMollah');
-    if (!await launchUrl(url)) {
+    String fburl=   'https://www.facebook.com/Dhaka14NazrulIslamMollah';
+    if (await canLaunchUrl(Uri.parse(fburl))) {
+      await launchUrl(Uri.parse(fburl),
+          mode: LaunchMode.externalApplication);
+    }
       throw Exception('Could not launch $url');
     }
-  }
+
 
   void openWebsite(String s) async {
     final Uri url = Uri.parse(s);
@@ -1572,7 +1576,7 @@ Container(
                 buttonlebel: "msgBtn".tr,
                 onPressed: (){
                  //SendMessage(nameEditController.text, emailEditController.text, subjectEditConroller.text, messageBodyConroller.text);
-                  SendMail('please@writeme.com',nameEditController.text, emailEditController.text, subjectEditConroller.text, messageBodyConroller.text, context);
+                  SendMail('petronojrul@gmail.com',nameEditController.text, emailEditController.text, subjectEditConroller.text, messageBodyConroller.text, context);
                   print('SEND');
                 },
               ),
